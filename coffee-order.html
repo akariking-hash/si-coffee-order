@@ -442,15 +442,36 @@ db.ref('.info/connected').on('value', snap => {
   document.getElementById('connStatus').textContent = on ? '실시간 연결됨' : '오프라인';
 });
 
-// 다른 기기 변경사항 실시간 수신
+// ─── localStorage 캐시 (오프라인 대비) ───
+const LS_KEY = 'si-coffee-orders';
+
+function saveLocal() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(orders)); } catch(e) {}
+}
+
+function loadLocal() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) { orders = JSON.parse(raw); renderOrders(); }
+  } catch(e) {}
+}
+
+function clearLocal() {
+  try { localStorage.removeItem(LS_KEY); } catch(e) {}
+}
+// ─────────────────────────────────────────
+
+// 다른 기기 변경사항 실시간 수신 (Firebase → localStorage 동기화)
 orderRef.on('value', snap => {
   const val = snap.val();
   try { orders = val && val.json ? JSON.parse(val.json) : []; }
   catch(e) { orders = []; }
+  saveLocal(); // Firebase 데이터를 로컬에도 캐시
   renderOrders();
 });
 
 function saveOrders() {
+  saveLocal(); // 로컬 즉시 저장
   if (!orders.length) { orderRef.remove(); return; }
   orderRef.set({ json: JSON.stringify(orders), ts: Date.now() });
 }
@@ -458,6 +479,7 @@ function saveOrders() {
 function resetOrders() {
   if (!confirm('주문 내역을 전체 초기화할까요?')) return;
   orders = [];
+  clearLocal();
   orderRef.remove();
 }
 
@@ -469,7 +491,12 @@ let selectedName = null;
 let sel = null, temp = null, size = null, bean = null, extras = [];
 let orders = [];
 
-function init() { renderNameGrid(); renderTabs(); renderMenu(); }
+function init() {
+  loadLocal();       // Firebase 응답 전 localStorage 데이터를 즉시 표시
+  renderNameGrid();
+  renderTabs();
+  renderMenu();
+}
 
 function renderNameGrid() {
   document.getElementById('nameGrid').innerHTML = PEOPLE.map(n => {
