@@ -62,7 +62,7 @@
       gap: 7px;
     }
     .name-btn {
-      padding: 8px 4px;
+      padding: 7px 4px;
       border-radius: 9px;
       border: 1.5px solid var(--border);
       background: #fafafa;
@@ -72,25 +72,20 @@
       color: var(--text);
       transition: all 0.15s;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
     }
     .name-btn:hover { border-color: var(--primary); color: var(--primary); background: #fff5f0; }
     .name-btn.selected { background: var(--primary); border-color: var(--primary); color: white; }
-    .name-btn.ordered {
-      border-color: #c0786a;
-      background: #fff0ec;
-      color: var(--primary);
-      position: relative;
-    }
-    .name-btn.ordered::after {
-      content: '✓';
-      position: absolute;
-      top: 2px;
-      right: 4px;
+    .name-btn.ordered { border-color: #c0786a; background: #fff0ec; color: var(--primary); }
+    .ordered-label {
       font-size: 9px;
-      font-weight: 900;
-      color: var(--primary);
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      opacity: 0.85;
     }
-    .name-btn.selected.ordered::after { color: rgba(255,255,255,0.7); }
 
     /* Tabs */
     .tabs {
@@ -502,7 +497,7 @@ function renderNameGrid() {
   document.getElementById('nameGrid').innerHTML = PEOPLE.map(n => {
     const ordered = orders.some(o => o.names.includes(n));
     const cls = [n === selectedName ? 'selected' : '', ordered ? 'ordered' : ''].join(' ');
-    return `<button class="name-btn ${cls}" onclick="pickName('${n}')">${n}</button>`;
+    return `<button class="name-btn ${cls}" onclick="pickName('${n}')">${n}${ordered ? '<span class="ordered-label">✓ 주문완료</span>' : ''}</button>`;
   }).join('');
 }
 
