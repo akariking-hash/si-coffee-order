@@ -697,20 +697,16 @@ function renderOrders() {
 
 function copyOrders() {
   const totalNames = orders.reduce((s,o) => s + o.names.length, 0);
-  const total = orders.reduce((s,o) => s + o.unitPrice * o.names.length, 0);
   const lines = [
     `☕ 커피 주문 내역 (${totalNames}명)`,
-    '─'.repeat(28),
+    '─'.repeat(24),
     ...orders.map((o, i) => {
-      const subtotal = (o.unitPrice * o.names.length).toLocaleString();
       let line = `${i+1}. ${o.drink}`;
       if (o.opts) line += ` (${o.opts})`;
-      line += `  ×${o.names.length}  ${subtotal}원`;
-      line += `\n     → ${o.names.join(', ')}`;
+      line += ` ×${o.names.length}`;
+      line += `\n     ${o.names.join(', ')}`;
       return line;
     }),
-    '─'.repeat(28),
-    `합계: ${total.toLocaleString()}원`,
   ];
   const text = lines.join('\n');
 
