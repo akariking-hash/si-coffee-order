@@ -35,7 +35,28 @@
       box-shadow: 0 1px 8px rgba(0,0,0,0.06);
     }
     header h1 { font-size: 17px; font-weight: 700; color: var(--primary); letter-spacing: -0.3px; }
-    header p { font-size: 11px; color: #b08080; margin-top: 2px; }
+    .header-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .cafe-tabs { display: flex; gap: 5px; }
+    .cafe-tab {
+      padding: 4px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #b08080;
+      transition: all 0.15s;
+    }
+    .cafe-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+    .cafe-tab:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
+    .conn-info { font-size: 11px; color: #b08080; }
 
     .container { max-width: 480px; margin: 0 auto; padding: 14px 14px 0; }
 
@@ -312,7 +333,10 @@
 
 <header>
   <h1>☕ 팀 커피 주문 취합</h1>
-  <p>Since 2018 · 소소 &nbsp;|&nbsp; <span class="conn-dot" id="connDot"></span><span id="connStatus">연결 중...</span></p>
+  <div class="header-bottom">
+    <div class="cafe-tabs" id="cafeTabs"></div>
+    <span class="conn-info"><span class="conn-dot" id="connDot"></span><span id="connStatus">연결 중...</span></span>
+  </div>
 </header>
 
 <div class="container">
@@ -354,7 +378,8 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const MENU = {
+const MENUS = {
+  '소소': {
   "COFFEE": [
     { name:"아메리카노",     price:2500, note:"S: 1,500 / L: 3,500", hasSize:true, hasBean:true },
     { name:"카페라떼",       price:3300, hasBean:true },
@@ -396,7 +421,8 @@ const MENU = {
     { name:"페퍼민트",                     price:3000 },
     { name:"루이보스 카라멜 티",           price:3000 },
   ],
-};
+  }, // 소소 끝
+}; // MENUS 끝
 
 const EXTRAS = [
   { label:"샷 추가",      price:500 },
@@ -427,46 +453,51 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const db       = firebase.database();
-const orderRef = db.ref('si-coffee/orders');
+const db = firebase.database();
 
 // 연결 상태 표시
 db.ref('.info/connected').on('value', snap => {
   const on = snap.val();
-  document.getElementById('connDot').className    = 'conn-dot' + (on ? ' on' : '');
+  document.getElementById('connDot').className     = 'conn-dot' + (on ? ' on' : '');
   document.getElementById('connStatus').textContent = on ? '실시간 연결됨' : '오프라인';
 });
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const CAFE_LIST = Object.keys(MENUS); // ['소소', ...]
+let currentCafe = CAFE_LIST[0];
+function getMenu() { return MENUS[currentCafe]; }
+function getLsKey() { return `si-coffee-orders-${currentCafe}`; }
+
+let orderRef = db.ref(`si-coffee/${currentCafe}/orders`);
+
 // ─── localStorage 캐시 (오프라인 대비) ───
-const LS_KEY = 'si-coffee-orders';
-
 function saveLocal() {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(orders)); } catch(e) {}
+  try { localStorage.setItem(getLsKey(), JSON.stringify(orders)); } catch(e) {}
 }
-
 function loadLocal() {
   try {
-    const raw = localStorage.getItem(LS_KEY);
+    const raw = localStorage.getItem(getLsKey());
     if (raw) { orders = JSON.parse(raw); renderOrders(); }
   } catch(e) {}
 }
-
 function clearLocal() {
-  try { localStorage.removeItem(LS_KEY); } catch(e) {}
+  try { localStorage.removeItem(getLsKey()); } catch(e) {}
 }
 // ─────────────────────────────────────────
 
-// 다른 기기 변경사항 실시간 수신 (Firebase → localStorage 동기화)
-orderRef.on('value', snap => {
-  const val = snap.val();
-  try { orders = val && val.json ? JSON.parse(val.json) : []; }
-  catch(e) { orders = []; }
-  saveLocal(); // Firebase 데이터를 로컬에도 캐시
-  renderOrders();
-});
+function attachOrderListener() {
+  orderRef.on('value', snap => {
+    const val = snap.val();
+    try { orders = val && val.json ? JSON.parse(val.json) : []; }
+    catch(e) { orders = []; }
+    saveLocal();
+    renderOrders();
+  });
+}
 
 function saveOrders() {
-  saveLocal(); // 로컬 즉시 저장
+  saveLocal();
   if (!orders.length) { orderRef.remove(); return; }
   orderRef.set({ json: JSON.stringify(orders), ts: Date.now() });
 }
@@ -480,14 +511,40 @@ function resetOrders() {
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-const cats = Object.keys(MENU);
-let cat = cats[0];
+let cats = Object.keys(getMenu());
+let cat  = cats[0];
 let selectedName = null;
 let sel = null, temp = null, size = null, bean = null, extras = [];
 let orders = [];
 
 function init() {
-  loadLocal();       // Firebase 응답 전 localStorage 데이터를 즉시 표시
+  loadLocal();
+  attachOrderListener();
+  renderCafeTabs();
+  renderNameGrid();
+  renderTabs();
+  renderMenu();
+}
+
+function renderCafeTabs() {
+  document.getElementById('cafeTabs').innerHTML = CAFE_LIST.map(c =>
+    `<button class="cafe-tab ${c === currentCafe ? 'active' : ''}" onclick="switchCafe('${c}')">${c}</button>`
+  ).join('');
+}
+
+function switchCafe(name) {
+  if (name === currentCafe) return;
+  orderRef.off();                              // 기존 리스너 해제
+  currentCafe = name;
+  cats = Object.keys(getMenu());
+  cat  = cats[0];
+  orderRef = db.ref(`si-coffee/${currentCafe}/orders`);
+  orders = [];
+  sel = null; temp = null; size = null; bean = null; extras = [];
+  document.getElementById('optCard').style.display = 'none';
+  loadLocal();
+  attachOrderListener();
+  renderCafeTabs();
   renderNameGrid();
   renderTabs();
   renderMenu();
@@ -519,7 +576,7 @@ function pickCat(c) {
 }
 
 function renderMenu() {
-  document.getElementById('menuList').innerHTML = MENU[cat].map((item, i) => `
+  document.getElementById('menuList').innerHTML = getMenu()[cat].map((item, i) => `
     <div class="menu-item ${sel===item?'selected':''}" onclick="pickItem(${i})">
       <div class="item-left">
         <div class="item-name">
@@ -535,7 +592,7 @@ function renderMenu() {
 }
 
 function pickItem(i) {
-  sel = MENU[cat][i];
+  sel = getMenu()[cat][i];
   temp = sel.tempOnly ?? null;
   size = sel.hasSize ? 'M' : null;
   bean = sel.hasBean ? 'sig' : null;
