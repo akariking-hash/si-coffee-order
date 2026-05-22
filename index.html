@@ -58,6 +58,61 @@
     .cafe-tab:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
     .conn-info { font-size: 11px; color: #b08080; }
 
+    /* 페이지 탭 네비게이션 */
+    .page-nav {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      position: sticky;
+      top: 73px;
+      z-index: 99;
+    }
+    .page-tab {
+      flex: 1;
+      max-width: 160px;
+      padding: 11px 0;
+      border: none;
+      border-bottom: 2.5px solid transparent;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.15s;
+    }
+    .page-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    /* 점심 선택 */
+    .lunch-date-label { font-size: 15px; font-weight: 700; color: var(--text); }
+    #lunchOpts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+    }
+    .lunch-opt-btn {
+      padding: 11px 8px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--card);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text);
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .lunch-opt-full { grid-column: 1 / -1; text-align: center; }
+    .lunch-opt-btn:hover:not(.on) { border-color: var(--primary); color: var(--primary); }
+    .lunch-opt-btn.on { background: var(--primary); border-color: var(--primary); color: white; font-weight: 700; }
+
+    .lunch-result-row { padding: 9px 0; border-bottom: 1px solid #f0e8e0; }
+    .lunch-result-row:last-child { border-bottom: none; }
+    .lunch-result-label { font-size: 14px; font-weight: 700; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+    .lunch-count { font-size: 11px; color: var(--muted); font-weight: 400; }
+    .lunch-result-names { font-size: 12px; color: var(--muted); }
+
     .container { max-width: 480px; margin: 0 auto; padding: 14px 14px 0; }
 
     .card {
@@ -111,13 +166,10 @@
     /* Tabs */
     .tabs {
       display: flex;
+      flex-wrap: wrap;
       gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 4px;
       margin-bottom: 12px;
-      scrollbar-width: none;
     }
-    .tabs::-webkit-scrollbar { display: none; }
     .tab {
       flex-shrink: 0;
       padding: 5px 13px;
@@ -310,6 +362,128 @@
 
     .empty { text-align: center; color: var(--muted); font-size: 14px; padding: 18px 0; }
 
+    .history-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .history-toggle .arrow { font-size: 10px; color: var(--muted); transition: transform 0.2s; }
+    .history-toggle .arrow.open { transform: rotate(180deg); }
+
+    .history-entry {
+      border-bottom: 1px solid #f0e8e0;
+    }
+    .history-entry:last-child { border-bottom: none; }
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 0;
+      cursor: pointer;
+      user-select: none;
+    }
+    .history-header:hover .history-date { color: #a03030; }
+    .history-date { font-size: 13px; font-weight: 700; color: var(--primary); transition: color 0.12s; }
+    .history-arrow { font-size: 10px; color: var(--muted); transition: transform 0.2s; }
+    .history-arrow.open { transform: rotate(180deg); }
+    .history-body { padding-bottom: 10px; }
+    .history-order { font-size: 13px; margin-bottom: 2px; }
+    .history-names { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+    .btn-copy-hist {
+      font-size: 11px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: none;
+      cursor: pointer;
+      color: var(--muted);
+      margin-top: 4px;
+      transition: all 0.15s;
+    }
+    .btn-copy-hist:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* 이미지 첨부 버튼 */
+    .lunch-opt-img-btn {
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      position: relative;
+      cursor: pointer;
+    }
+    .lunch-opt-img-btn.on {
+      background: var(--card) !important;
+      border-color: var(--primary);
+      border-width: 2.5px;
+    }
+    .lunch-opt-img-btn.on .opt-name { color: var(--primary); font-weight: 700; }
+    .opt-img-area {
+      width: 100%;
+      height: 76px;
+      background: #f5ebe5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .opt-img { width: 100%; height: 100%; object-fit: cover; }
+    .opt-plus-icon { font-size: 22px; color: #c0a090; }
+    .opt-name { padding: 7px 6px; font-size: 13px; font-weight: 600; color: var(--text); text-align: center; }
+    .opt-img-action-btn {
+      position: absolute;
+      top: 5px; right: 5px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(0,0,0,0.1);
+      font-size: 12px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2; padding: 0; color: #555; line-height: 1;
+    }
+    .opt-img-action-btn:hover { background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+
+    /* 이미지 팝업 메뉴 */
+    #imgMenu {
+      display: none;
+      position: fixed;
+      z-index: 300;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      overflow: hidden;
+      min-width: 170px;
+    }
+    .img-menu-item {
+      display: block; width: 100%;
+      padding: 12px 18px; border: none; background: none;
+      font-size: 14px; cursor: pointer; text-align: left;
+      font-family: inherit; color: var(--text); transition: background 0.12s;
+    }
+    .img-menu-item:hover { background: #fdf0eb; }
+    .img-menu-item + .img-menu-item { border-top: 1px solid #f0e8e0; }
+
+    .lunch-note-input {
+      grid-column: 1 / -1;
+      width: 100%;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fdf0eb;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .lunch-note-input:focus { border-color: var(--primary); background: #fff5f0; }
+
     .toast {
       position: fixed;
       bottom: 24px;
@@ -332,14 +506,24 @@
 <body>
 
 <header>
-  <h1>☕ 팀 커피 주문 취합</h1>
+  <h1>☕ SI 팀</h1>
   <div class="header-bottom">
-    <div class="cafe-tabs" id="cafeTabs"></div>
     <span class="conn-info"><span class="conn-dot" id="connDot"></span><span id="connStatus">연결 중...</span></span>
   </div>
 </header>
 
-<div class="container">
+<nav class="page-nav">
+  <button class="page-tab active" data-page="lunch"  onclick="switchPage('lunch')">🍱 점심 선택</button>
+  <button class="page-tab"        data-page="coffee" onclick="switchPage('coffee')">☕ 커피 주문</button>
+</nav>
+
+<!-- ☕ 커피 주문 페이지 -->
+<div id="page-coffee" class="container" style="display:none">
+
+  <!-- 카페 선택 -->
+  <div class="card" style="padding-bottom:12px">
+    <div class="cafe-tabs" id="cafeTabs"></div>
+  </div>
 
   <!-- 이름 -->
   <div class="card">
@@ -373,7 +557,57 @@
     <button class="btn-reset" id="btnReset" style="display:none" onclick="resetOrders()">🗑️ 주문 초기화</button>
   </div>
 
+  <!-- 과거 주문내역 -->
+  <div class="card">
+    <div class="history-toggle" onclick="toggleHistory()">
+      <div class="card-title" style="margin-bottom:0">과거 주문내역 조회</div>
+      <span class="arrow" id="histArrow">▼</span>
+    </div>
+    <div id="historyList" style="display:none;margin-top:12px">
+      <div class="empty">조회된 내역이 없어요</div>
+    </div>
+  </div>
+
 </div>
+<!-- /☕ 커피 주문 페이지 -->
+
+<!-- 🍱 점심 선택 페이지 -->
+<div id="page-lunch" class="container" style="display:none">
+
+  <!-- 오늘 날짜 -->
+  <div class="card">
+    <div class="card-title">오늘의 점심</div>
+    <div class="lunch-date-label" id="lunchDate"></div>
+  </div>
+
+  <!-- 이름 선택 -->
+  <div class="card">
+    <div class="card-title">내 이름 선택</div>
+    <div class="name-grid" id="lunchNameGrid"></div>
+  </div>
+
+  <!-- 점심 선택 버튼 -->
+  <div class="card" id="lunchOptCard" style="display:none">
+    <div class="card-title">점심 선택</div>
+    <div id="lunchOpts"></div>
+  </div>
+
+  <!-- 오늘의 현황 -->
+  <div class="card">
+    <div class="card-title">오늘의 현황</div>
+    <div id="lunchResult"><div class="empty">아직 선택한 사람이 없어요</div></div>
+  </div>
+
+</div>
+<!-- /🍱 점심 선택 페이지 -->
+
+<!-- 이미지 팝업 메뉴 -->
+<div id="imgMenu">
+  <button class="img-menu-item" onclick="pasteFromClipboard()">📋 클립보드에서 붙여넣기</button>
+  <button class="img-menu-item" onclick="triggerFileInput()">📎 파일 첨부</button>
+  <button class="img-menu-item" id="imgMenuDelete" onclick="removeCurrentImage()" style="color:#c0504d">🗑️ 이미지 삭제</button>
+</div>
+<input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
 
 <div class="toast" id="toast"></div>
 
@@ -414,7 +648,7 @@ const MENUS = {
     { name:"얼그레이 밀크티", price:4000, star:true },
   ],
   "TEA": [
-    { name:"얼그레이 복숭아 아이스 티",    price:3000 },
+    { name:"얼그레이 복숭아 아이스 티",    price:3000, tempOnly:"ICE" },
     { name:"자두 자몽 히비스커스 티",      price:3500 },
     { name:"얼그레이",                     price:3000 },
     { name:"캐모마일",                     price:3000 },
@@ -426,17 +660,19 @@ const MENUS = {
 
 const EXTRAS = [
   { label:"샷 추가",      price:500 },
-  { label:"디카페인 변경", price:700 },
-  { label:"오트밀 변경",  price:1000 },
+  { label:"디카페인", price:700 },
+  { label:"오트밀",   price:1000 },
 ];
 
-const TEMP_FREE = new Set(["COLD BREW","ADE","TEA"]);
+const TEMP_FREE = new Set(["COLD BREW","ADE"]);
 
 const PEOPLE = [
   '유낙근','이병호','신승국','이경선',
   '강제규','김샛별','신창근','박혜영',
   '이영실','윤주열','주승환','유석민','지서영',
 ];
+
+const LUNCH_OPTIONS = ['이리오너라','굿모닝','가톨릭회관','도시락','약속','연차','오늘은 여기 어때요?'];
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔥 Firebase 설정
@@ -469,7 +705,18 @@ let currentCafe = CAFE_LIST[0];
 function getMenu() { return MENUS[currentCafe]; }
 function getLsKey() { return `si-coffee-orders-${currentCafe}`; }
 
-let orderRef = db.ref(`si-coffee/${currentCafe}/orders`);
+let orderRef   = db.ref(`si-coffee/${currentCafe}/orders`);
+let historyRef = db.ref(`si-coffee/${currentCafe}/history`);
+
+// ─── 구버전 opts 텍스트 정규화 ───
+function normalizeOrders(arr) {
+  return arr.map(o => ({
+    ...o,
+    opts: (o.opts || '')
+      .replace(/디카페인 변경/g, '디카페인')
+      .replace(/오트밀 변경/g,   '오트밀'),
+  }));
+}
 
 // ─── localStorage 캐시 (오프라인 대비) ───
 function saveLocal() {
@@ -478,7 +725,7 @@ function saveLocal() {
 function loadLocal() {
   try {
     const raw = localStorage.getItem(getLsKey());
-    if (raw) { orders = JSON.parse(raw); renderOrders(); }
+    if (raw) { orders = normalizeOrders(JSON.parse(raw)); renderOrders(); }
   } catch(e) {}
 }
 function clearLocal() {
@@ -489,7 +736,7 @@ function clearLocal() {
 function attachOrderListener() {
   orderRef.on('value', snap => {
     const val = snap.val();
-    try { orders = val && val.json ? JSON.parse(val.json) : []; }
+    try { orders = normalizeOrders(val && val.json ? JSON.parse(val.json) : []); }
     catch(e) { orders = []; }
     saveLocal();
     renderOrders();
@@ -504,6 +751,12 @@ function saveOrders() {
 
 function resetOrders() {
   if (!confirm('주문 내역을 전체 초기화할까요?')) return;
+  if (orders.length > 0) {
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const dateStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    historyRef.push({ date: dateStr, orders: JSON.parse(JSON.stringify(orders)) });
+  }
   orders = [];
   clearLocal();
   orderRef.remove();
@@ -524,6 +777,7 @@ function init() {
   renderNameGrid();
   renderTabs();
   renderMenu();
+  switchPage('lunch'); // 기본 페이지: 점심 선택
 }
 
 function renderCafeTabs() {
@@ -538,7 +792,8 @@ function switchCafe(name) {
   currentCafe = name;
   cats = Object.keys(getMenu());
   cat  = cats[0];
-  orderRef = db.ref(`si-coffee/${currentCafe}/orders`);
+  orderRef   = db.ref(`si-coffee/${currentCafe}/orders`);
+  historyRef = db.ref(`si-coffee/${currentCafe}/history`);
   orders = [];
   sel = null; temp = null; size = null; bean = null; extras = [];
   document.getElementById('optCard').style.display = 'none';
@@ -616,13 +871,14 @@ function renderOpts() {
       </div></div>`;
   }
 
-  // Size (아메리카노)
+  // Size (아메리카노) — HOT은 L 없음
   if (sel.hasSize) {
-    const prices = {S:1500, M:2500, L:3500};
+    const prices  = {S:1500, M:2500, L:3500};
+    const sizes   = temp === 'ICE' ? ['S','M','L'] : ['S','M'];
     html += `<div class="opt-group">
       <div class="opt-label">사이즈</div>
       <div class="opt-btns">
-        ${['S','M','L'].map(s =>
+        ${sizes.map(s =>
           `<button class="opt-btn ${size===s?'on':''}" onclick="setSize('${s}')">
             ${s} (${prices[s].toLocaleString()}원)
           </button>`
@@ -654,7 +910,11 @@ function renderOpts() {
   document.getElementById('optGroups').innerHTML = html;
 }
 
-function setTemp(t) { temp = t; renderOpts(); }
+function setTemp(t) {
+  temp = t;
+  if (t === 'HOT' && size === 'L') size = 'M'; // HOT엔 L 없음
+  renderOpts();
+}
 function setSize(s) { size = s; renderOpts(); }
 function setBean(b) { bean = b; renderOpts(); }
 function toggleExtra(i) {
@@ -674,7 +934,8 @@ function buildOptsLabel() {
   const parts = [];
   if (temp) parts.push(temp);
   if (size && size !== 'M') parts.push(size + '사이즈');
-  if (bean === 'dark') parts.push('다크 블렌드');
+  if (bean === 'sig')  parts.push('시그니처');
+  if (bean === 'dark') parts.push('다크');
   extras.forEach(i => parts.push(EXTRAS[i].label));
   return parts.join(' · ');
 }
@@ -753,18 +1014,29 @@ function renderOrders() {
 }
 
 function copyOrders() {
-  const totalNames = orders.reduce((s,o) => s + o.names.length, 0);
-  const lines = [
-    `☕ 커피 주문 내역 (${totalNames}명)`,
-    '─'.repeat(24),
-    ...orders.map((o, i) => {
-      let line = `${i+1}. ${o.drink}`;
-      if (o.opts) line += ` (${o.opts})`;
-      line += ` ×${o.names.length}`;
-      line += `\n     ${o.names.join(', ')}`;
-      return line;
-    }),
-  ];
+  // 메뉴판 등장 순서 맵 생성
+  const menuOrder = {};
+  let idx = 0;
+  Object.values(getMenu()).forEach(items =>
+    items.forEach(item => { menuOrder[item.name] = idx++; })
+  );
+
+  // 메뉴 순서로 정렬 후 같은 음료끼리 모음
+  const sorted = [...orders].sort((a, b) =>
+    (menuOrder[a.drink] ?? 999) - (menuOrder[b.drink] ?? 999)
+  );
+
+  const lines = [];
+  let prevDrink = null;
+  sorted.forEach(o => {
+    if (prevDrink !== null && prevDrink !== o.drink) lines.push('');
+    let line = o.drink;
+    if (o.opts) line += ` (${o.opts})`;
+    line += ` ×${o.names.length}`;
+    lines.push(line);
+    prevDrink = o.drink;
+  });
+
   const text = lines.join('\n');
 
   if (navigator.clipboard) {
@@ -795,7 +1067,357 @@ function toast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
 }
 
+// ── 페이지 전환 ────────────────────────────
+function switchPage(page) {
+  document.getElementById('page-coffee').style.display = page === 'coffee' ? 'block' : 'none';
+  document.getElementById('page-lunch').style.display  = page === 'lunch'  ? 'block' : 'none';
+  document.querySelectorAll('.page-tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.page === page)
+  );
+  if (page === 'lunch') initLunch();
+}
+
+// ── 점심 선택 ──────────────────────────────
+const IMAGE_OPTS = new Set(['이리오너라','굿모닝','가톨릭회관']); // 이미지 첨부 가능 옵션
+
+let lunchSelectedName = null;
+let lunchChoices      = {};
+let lunchRef          = null;
+let cafeImages        = {};   // { 이리오너라: 'data:image/...', ... }
+let cafeImagesRef     = null;
+let currentImageOpt   = null; // 이미지 메뉴 열린 옵션명
+
+// 오늘은 여기 어때요?|노트 형태 파싱
+function getChoiceBase(val) { return val ? val.split('|')[0] : null; }
+function getChoiceNote(val) { return (val && val.includes('|')) ? val.split('|')[1] : ''; }
+
+function getLunchDateKey() {
+  const d = new Date(), p = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+}
+
+function initLunch() {
+  const d = new Date();
+  const days = ['일','월','화','수','목','금','토'];
+  document.getElementById('lunchDate').textContent =
+    `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
+
+  if (lunchRef) lunchRef.off();
+  lunchRef = db.ref(`si-lunch/${getLunchDateKey()}`);
+  lunchRef.on('value', snap => {
+    lunchChoices = snap.val() || {};
+    renderLunchNameGrid();
+    renderLunchResult();
+    // 텍스트 입력 중이면 opts 재렌더 스킵 (타이핑 방해 방지)
+    if (lunchSelectedName) {
+      const noteEl = document.getElementById('lunchNote');
+      if (!(noteEl && document.activeElement === noteEl)) renderLunchOpts();
+    }
+  });
+
+  // 카페 이미지 리스너 (한 번만 등록)
+  if (!cafeImagesRef) {
+    cafeImagesRef = db.ref('si-cafe-images');
+    cafeImagesRef.on('value', snap => {
+      cafeImages = snap.val() || {};
+      if (lunchSelectedName) renderLunchOpts();
+    });
+  }
+}
+
+function renderLunchNameGrid() {
+  document.getElementById('lunchNameGrid').innerHTML = PEOPLE.map(n => {
+    const choice = lunchChoices[n];
+    const base   = getChoiceBase(choice);
+    const cls = ['name-btn', n === lunchSelectedName ? 'selected' : '', base ? 'ordered' : ''].join(' ');
+    return `<button class="${cls}" onclick="pickLunchName('${n}')">
+      ${n}
+      ${base ? `<span class="ordered-label">${base}</span>` : ''}
+    </button>`;
+  }).join('');
+}
+
+function pickLunchName(n) {
+  lunchSelectedName = n;
+  renderLunchNameGrid();
+  renderLunchOpts();
+  document.getElementById('lunchOptCard').style.display = 'block';
+  document.getElementById('lunchOptCard').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function renderLunchOpts() {
+  const current     = lunchChoices[lunchSelectedName];
+  const currentBase = getChoiceBase(current);
+  const currentNote = getChoiceNote(current);
+
+  let html = '';
+  LUNCH_OPTIONS.forEach(opt => {
+    const isFull = opt === '오늘은 여기 어때요?';
+    const isOn   = currentBase === opt;
+
+    if (IMAGE_OPTS.has(opt)) {
+      // 이미지 첨부 가능한 버튼 (이리오너라 / 굿모닝 / 가톨릭회관)
+      const imgData = cafeImages[opt];
+      html += `<div class="lunch-opt-btn lunch-opt-img-btn ${isOn ? 'on' : ''}" onclick="selectLunch('${opt}')">
+        <div class="opt-img-area">
+          ${imgData
+            ? `<img src="${imgData}" class="opt-img" alt="${opt}">`
+            : '<span class="opt-plus-icon">+</span>'}
+        </div>
+        <span class="opt-name">${opt}</span>
+        <button class="opt-img-action-btn" onclick="event.stopPropagation();openImageMenu('${opt}',event)">${imgData ? '✎' : '+'}</button>
+      </div>`;
+    } else {
+      html += `<button class="lunch-opt-btn ${isFull ? 'lunch-opt-full' : ''} ${isOn ? 'on' : ''}" onclick="selectLunch('${opt}')">${opt}</button>`;
+      if (isFull && isOn) {
+        html += `<input type="text" id="lunchNote" class="lunch-note-input"
+          placeholder="어디 가고 싶어요?"
+          value="${currentNote.replace(/"/g, '&quot;')}"
+          onblur="saveLunchNote()"
+          onkeydown="if(event.key==='Enter')this.blur()">`;
+      }
+    }
+  });
+
+  document.getElementById('lunchOpts').innerHTML = html;
+
+  // 새로 렌더링 후 입력창에 포커스
+  if (currentBase === '오늘은 여기 어때요?') {
+    const noteEl = document.getElementById('lunchNote');
+    if (noteEl && !currentNote) noteEl.focus();
+  }
+}
+
+function selectLunch(opt) {
+  if (!lunchSelectedName) return;
+  const current     = lunchChoices[lunchSelectedName];
+  const currentBase = getChoiceBase(current);
+  // 같은 항목 다시 누르면 취소
+  lunchRef.child(lunchSelectedName).set(currentBase === opt ? null : opt);
+}
+
+function saveLunchNote() {
+  if (!lunchSelectedName) return;
+  const noteEl = document.getElementById('lunchNote');
+  if (!noteEl) return;
+  const note  = noteEl.value.trim();
+  const value = note ? `오늘은 여기 어때요?|${note}` : '오늘은 여기 어때요?';
+  lunchRef.child(lunchSelectedName).set(value);
+}
+
+// ── 카페 이미지 관리 ───────────────────────
+function openImageMenu(opt, e) {
+  currentImageOpt = opt;
+  const menu = document.getElementById('imgMenu');
+  const delBtn = document.getElementById('imgMenuDelete');
+  delBtn.style.display = cafeImages[opt] ? 'block' : 'none';
+
+  // 팝업 위치 계산
+  const rect = e.currentTarget.getBoundingClientRect();
+  const menuW = 170;
+  let left = rect.left;
+  if (left + menuW > window.innerWidth - 8) left = window.innerWidth - menuW - 8;
+  menu.style.left = left + 'px';
+  menu.style.top  = (rect.bottom + 6) + 'px';
+  menu.style.display = 'block';
+
+  setTimeout(() => document.addEventListener('click', closeImageMenu, { once: true }), 0);
+}
+
+function closeImageMenu() {
+  document.getElementById('imgMenu').style.display = 'none';
+}
+
+async function pasteFromClipboard() {
+  closeImageMenu();
+  try {
+    const items = await navigator.clipboard.read();
+    for (const item of items) {
+      const imgType = item.types.find(t => t.startsWith('image/'));
+      if (imgType) {
+        const blob = await item.getType(imgType);
+        const reader = new FileReader();
+        reader.onload = async ev => {
+          const compressed = await compressImage(ev.target.result, 600, 400, 0.75);
+          db.ref(`si-cafe-images/${currentImageOpt}`).set(compressed);
+          toast('이미지가 등록됐어요!');
+        };
+        reader.readAsDataURL(blob);
+        return;
+      }
+    }
+    toast('클립보드에 이미지가 없어요');
+  } catch(err) {
+    toast('클립보드 접근 권한을 허용해주세요');
+  }
+}
+
+function triggerFileInput() {
+  closeImageMenu();
+  document.getElementById('imgFileInput').click();
+}
+
+function handleFileSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async ev => {
+    const compressed = await compressImage(ev.target.result, 600, 400, 0.75);
+    db.ref(`si-cafe-images/${currentImageOpt}`).set(compressed);
+    toast('이미지가 등록됐어요!');
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function removeCurrentImage() {
+  closeImageMenu();
+  db.ref(`si-cafe-images/${currentImageOpt}`).remove();
+  toast('이미지를 삭제했어요');
+}
+
+function compressImage(dataURL, maxW, maxH, quality) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const ratio = Math.min(maxW / img.width, maxH / img.height, 1);
+      const w = Math.round(img.width  * ratio);
+      const h = Math.round(img.height * ratio);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = dataURL;
+  });
+}
+// ───────────────────────────────────────────
+
+function renderLunchResult() {
+  const groups = {};
+  LUNCH_OPTIONS.forEach(opt => { groups[opt] = []; });
+  groups['미선택'] = [];
+  const personNotes = {}; // name → note (오늘은 여기 어때요?용)
+
+  PEOPLE.forEach(n => {
+    const c    = lunchChoices[n];
+    const base = getChoiceBase(c);
+    const note = getChoiceNote(c);
+    if (base && groups[base] !== undefined) {
+      groups[base].push(n);
+      if (note) personNotes[n] = note;
+    } else {
+      groups['미선택'].push(n);
+    }
+  });
+
+  const el = document.getElementById('lunchResult');
+  const rows = [...LUNCH_OPTIONS, '미선택']
+    .filter(opt => groups[opt].length > 0)
+    .map(opt => {
+      const nameStrs = groups[opt].map(n =>
+        personNotes[n] ? `${n}(${personNotes[n]})` : n
+      );
+      return `
+        <div class="lunch-result-row">
+          <div class="lunch-result-label">
+            ${opt} <span class="lunch-count">${groups[opt].length}명</span>
+          </div>
+          <div class="lunch-result-names">${nameStrs.join(', ')}</div>
+        </div>`;
+    }).join('');
+  el.innerHTML = rows || '<div class="empty">아직 선택한 사람이 없어요</div>';
+}
+// ───────────────────────────────────────────
+
+// ── 과거 주문내역 ──────────────────────────
+let historyOpen = false;
+let historyData = {}; // 로드된 데이터 캐시
+
+function toggleHistory() {
+  historyOpen = !historyOpen;
+  document.getElementById('histArrow').className = 'arrow' + (historyOpen ? ' open' : '');
+  const list = document.getElementById('historyList');
+  list.style.display = historyOpen ? 'block' : 'none';
+  if (historyOpen) loadHistory();
+}
+
+function loadHistory() {
+  historyRef.orderByKey().limitToLast(30).once('value', snap => {
+    const val = snap.val();
+    const list = document.getElementById('historyList');
+    if (!val) { list.innerHTML = '<div class="empty">조회된 내역이 없어요</div>'; return; }
+    historyData = val;
+    const entries = Object.entries(val).reverse(); // 최신순
+    list.innerHTML = entries.map(([key]) => {
+      const entry = historyData[key];
+      return `<div class="history-entry">
+        <div class="history-header" onclick="toggleHistoryEntry('${key}')">
+          <span class="history-date">${entry.date}</span>
+          <span class="history-arrow" id="ha-${key}">▼</span>
+        </div>
+        <div class="history-body" id="hb-${key}" style="display:none"></div>
+      </div>`;
+    }).join('');
+  });
+}
+
+function toggleHistoryEntry(key) {
+  const body  = document.getElementById(`hb-${key}`);
+  const arrow = document.getElementById(`ha-${key}`);
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  arrow.className = 'history-arrow' + (isOpen ? '' : ' open');
+
+  if (!isOpen && !body.dataset.loaded) {
+    const entry = historyData[key];
+    const orderRows = entry.orders.map(o => {
+      let line = o.drink;
+      if (o.opts) line += ` (${o.opts})`;
+      line += ` ×${o.names.length}`;
+      return `<div class="history-order">${line}</div>
+              <div class="history-names">→ ${o.names.join(', ')}</div>`;
+    }).join('');
+    body.innerHTML = orderRows + `<button class="btn-copy-hist" onclick="copyHistory('${key}')">📋 복사</button>`;
+    body.dataset.loaded = '1';
+  }
+}
+
+function copyHistory(key) {
+  const entry = historyData[key];
+  if (!entry) return;
+
+  const menuOrder = {};
+  let idx = 0;
+  Object.values(getMenu()).forEach(items =>
+    items.forEach(item => { menuOrder[item.name] = idx++; })
+  );
+  const sorted = [...entry.orders].sort((a, b) =>
+    (menuOrder[a.drink] ?? 999) - (menuOrder[b.drink] ?? 999)
+  );
+
+  const lines = [];
+  let prevDrink = null;
+  sorted.forEach(o => {
+    if (prevDrink !== null && prevDrink !== o.drink) lines.push('');
+    let line = o.drink;
+    if (o.opts) line += ` (${o.opts})`;
+    line += ` ×${o.names.length}  ${o.names.join(', ')}`;
+    lines.push(line);
+    prevDrink = o.drink;
+  });
+
+  const text = `[${entry.date}]\n` + lines.join('\n');
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => toast('복사됐어요!')).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+// ────────────────────────────────────────────
+
 init();
+
 </script>
 </body>
 </html>
