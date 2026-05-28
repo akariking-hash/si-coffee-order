@@ -111,6 +111,12 @@
     .day-tab.active .day-dow,
     .day-tab.active .day-num,
     .day-tab.active .day-holi { color: white !important; }
+    .day-tab.holiday {
+      opacity: 0.45;
+      background: #f0ebe8;
+      border-color: #e0d0c8;
+      cursor: not-allowed;
+    }
     .day-tab.holiday .day-num { color: #c0504d; }
 
     /* 점심 선택 */
@@ -1284,7 +1290,7 @@ function renderWeekTabs() {
       ds === todayStr && ds !== selStr ? 'today' : '',
       holiday                    ? 'holiday' : '',
     ].filter(Boolean).join(' ');
-    return `<button class="${cls}" onclick="switchLunchDay('${ds}')">
+    return `<button class="${cls}" ${holiday ? 'disabled' : `onclick="switchLunchDay('${ds}')"`}>
       <div class="day-dow">${ds === todayStr ? '오늘' : DOWS[i]}</div>
       <div class="day-num">${d.getDate()}</div>
       ${holiday ? `<div class="day-holi">${holiday}</div>` : ''}
