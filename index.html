@@ -104,7 +104,7 @@
     }
     .day-tab .day-dow { font-size: 10px; font-weight: 700; color: var(--muted); }
     .day-tab .day-num { font-size: 15px; font-weight: 700; color: var(--text); margin: 2px 0; }
-    .day-tab .day-holi { font-size: 8px; color: #c0504d; line-height: 1.2; }
+    .day-tab .day-holi { font-size: 8px; color: #333333; line-height: 1.2; }
     .day-tab.today { border-color: #c0a090; }
     .day-tab.today .day-num { color: var(--primary); }
     .day-tab.active { background: var(--primary); border-color: var(--primary); }
@@ -117,7 +117,7 @@
       border-color: #e0d0c8;
       cursor: not-allowed;
     }
-    .day-tab.holiday .day-num { color: #c0504d; }
+    .day-tab.holiday .day-num { color: #333333; }
 
     /* 점심 선택 */
     #lunchOpts {
@@ -768,9 +768,10 @@ const MENUS = {
 }; // MENUS 끝
 
 const EXTRAS = [
-  { label:"샷 추가",      price:500 },
+  { label:"샷 추가",  price:500 },
   { label:"디카페인", price:700 },
   { label:"오트밀",   price:1000 },
+  { label:"덜 달게",  price:0 },
 ];
 
 const TEMP_FREE = new Set(["COLD BREW","ADE"]);
