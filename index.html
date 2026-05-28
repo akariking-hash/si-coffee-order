@@ -141,6 +141,32 @@
     .lunch-opt-btn:hover:not(.on) { border-color: var(--primary); color: var(--primary); }
     .lunch-opt-btn.on { background: var(--primary); border-color: var(--primary); color: white; font-weight: 700; }
 
+    /* 점심 이름 그리드 — 내 이름 vs 선택 완료 구분 */
+    #page-lunch .name-btn.ordered {
+      border-color: #43a047;
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+    #page-lunch .name-btn.ordered .ordered-label {
+      color: #388e3c;
+      opacity: 1;
+    }
+    #page-lunch .name-btn.selected {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 0 0 3px rgba(139,26,26,0.18);
+    }
+    #page-lunch .name-btn.selected.ordered {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 0 0 3px rgba(139,26,26,0.18);
+    }
+    #page-lunch .name-btn.selected .ordered-label {
+      color: rgba(255,255,255,0.85);
+    }
+
     .lunch-result-row { padding: 9px 0; border-bottom: 1px solid #f0e8e0; }
     .lunch-result-row:last-child { border-bottom: none; }
     .lunch-result-label { font-size: 14px; font-weight: 700; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
@@ -1050,6 +1076,14 @@ function buildOptsLabel() {
   return parts.join(' · ');
 }
 
+// 한국어 '로'/'으로' 조사 선택
+function josa로(str) {
+  const code = str.charCodeAt(str.length - 1);
+  if (code < 0xAC00 || code > 0xD7A3) return '로';
+  const jong = (code - 0xAC00) % 28;
+  return (jong === 0 || jong === 8) ? '로' : '으로';
+}
+
 function addOrder() {
   const name = selectedName;
   if (!name) { toast('주문자를 선택해주세요'); return; }
@@ -1057,21 +1091,35 @@ function addOrder() {
   if (!sel.tempOnly && !TEMP_FREE.has(cat) && !temp) { toast('온도를 선택해주세요'); return; }
 
   const opts = buildOptsLabel();
-  const key = sel.name + '|' + opts;
+  const key  = sel.name + '|' + opts;
+
+  // 이미 다른 메뉴를 주문한 경우 기존 주문에서 제거 (1인 1잔)
+  let replaced = false;
+  orders = orders.map(o => {
+    if (o.names.includes(name)) { replaced = true; return { ...o, names: o.names.filter(n => n !== name) }; }
+    return o;
+  }).filter(o => o.names.length > 0);
+
+  // 새 주문 추가
   const existing = orders.find(o => o.key === key);
+  if (existing) { existing.names.push(name); }
+  else { orders.push({ key, drink: sel.name, opts, unitPrice: calcPrice(), names: [name] }); }
 
-  if (existing) {
-    existing.names.push(name);
-  } else {
-    orders.push({ key, drink: sel.name, opts, unitPrice: calcPrice(), names: [name] });
-  }
+  saveOrders();
 
-  saveOrders(); // Firebase 저장 → onValue가 renderOrders() 처리
+  // sel 초기화 전에 메뉴명 저장
+  const drinkName = opts ? `${sel.name} (${opts})` : sel.name;
+  const drinkBase = sel.name;
 
   sel = null; temp = null; size = null; bean = null; extras = [];
   document.getElementById('optCard').style.display = 'none';
   renderMenu();
-  toast(`${name}님 주문 추가 완료!`);
+
+  if (replaced) {
+    toast(`${drinkName}${josa로(drinkBase)} 바꾸어서 추가했습니다`);
+  } else {
+    toast(`${name}님 주문 추가 완료!`);
+  }
 }
 
 function removeName(key, nameIdx) {
