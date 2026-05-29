@@ -811,6 +811,19 @@ const PEOPLE = [
 
 const LUNCH_OPTIONS = ['이리오너라','굿모닝','가톨릭회관','도시락','약속','연차','오늘은 여기 어때요?'];
 
+// ── 내 이름 기억 (기기별 localStorage) ─────
+function getMyName() {
+  try { return localStorage.getItem('si-my-name'); } catch(e) { return null; }
+}
+function saveMyName(n) {
+  try { localStorage.setItem('si-my-name', n); } catch(e) {}
+}
+function getPeopleOrdered() {
+  const me = getMyName();
+  if (!me || !PEOPLE.includes(me)) return PEOPLE;
+  return [me, ...PEOPLE.filter(n => n !== me)];
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔥 Firebase 설정
 // console.firebase.google.com → 프로젝트 → 앱 추가(웹) → 구성 복사 후 붙여넣기
@@ -943,15 +956,17 @@ function switchCafe(name) {
 }
 
 function renderNameGrid() {
-  document.getElementById('nameGrid').innerHTML = PEOPLE.map(n => {
+  document.getElementById('nameGrid').innerHTML = getPeopleOrdered().map(n => {
     const ordered = orders.some(o => o.names.includes(n));
     const cls = [n === selectedName ? 'selected' : '', ordered ? 'ordered' : ''].join(' ');
-    return `<button class="name-btn ${cls}" onclick="pickName('${n}')">${n}${ordered ? '<span class="ordered-label">✓ 주문완료</span>' : ''}</button>`;
+    const meLabel = n === getMyName() ? '<span class="ordered-label" style="opacity:.6">나</span>' : '';
+    return `<button class="name-btn ${cls}" onclick="pickName('${n}')">${n}${ordered ? '<span class="ordered-label">✓ 주문완료</span>' : meLabel}</button>`;
   }).join('');
 }
 
 function pickName(n) {
   selectedName = n;
+  saveMyName(n);
   renderNameGrid();
 }
 
@@ -1381,19 +1396,21 @@ function initLunchDay() {
 }
 
 function renderLunchNameGrid() {
-  document.getElementById('lunchNameGrid').innerHTML = PEOPLE.map(n => {
+  document.getElementById('lunchNameGrid').innerHTML = getPeopleOrdered().map(n => {
     const choice = lunchChoices[n];
     const base   = getChoiceBase(choice);
     const cls = ['name-btn', n === lunchSelectedName ? 'selected' : '', base ? 'ordered' : ''].join(' ');
+    const meLabel = (!base && n === getMyName()) ? '<span class="ordered-label" style="opacity:.6">나</span>' : '';
     return `<button class="${cls}" onclick="pickLunchName('${n}')">
       ${n}
-      ${base ? `<span class="ordered-label">${base}</span>` : ''}
+      ${base ? `<span class="ordered-label">${base}</span>` : meLabel}
     </button>`;
   }).join('');
 }
 
 function pickLunchName(n) {
   lunchSelectedName = n;
+  saveMyName(n);
   renderLunchNameGrid();
   renderLunchOpts();
 }
