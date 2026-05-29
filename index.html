@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SI Order</title>
+  <title>SI Team Orders</title>
   <link rel="icon" type="image/png" href="favicon_si.png">
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -84,6 +84,7 @@
       transition: all 0.15s;
     }
     .page-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .page-tab[data-page="lunch"].active { color: #F5620A; border-bottom-color: #F5620A; }
 
     /* 주간 탭 */
     .week-nav {
@@ -129,7 +130,7 @@
     .lunch-opt-btn {
       padding: 11px 8px;
       border-radius: 10px;
-      border: 1.5px solid var(--border);
+      border: 1.5px solid #d5d5d5;
       background: var(--card);
       font-size: 14px;
       font-weight: 500;
@@ -139,30 +140,32 @@
       transition: all 0.15s;
     }
     .lunch-opt-full { grid-column: 1 / -1; text-align: center; }
+    .lunch-opt-btn:not(.lunch-opt-img-btn):not(.lunch-opt-full) { min-height: 80px; }
     .lunch-opt-btn:hover:not(.on) { border-color: var(--primary); color: var(--primary); }
     .lunch-opt-btn.on { background: var(--primary); border-color: var(--primary); color: white; font-weight: 700; }
 
-    /* 점심 이름 그리드 — 내 이름 vs 선택 완료 구분 */
+    /* 점심 이름 그리드 — 오렌지 테마 */
+    #page-lunch .name-btn:hover { background: #FFF0E8; border-color: var(--border); color: var(--text); }
     #page-lunch .name-btn.ordered {
-      border-color: #43a047;
-      background: #e8f5e9;
-      color: #2e7d32;
+      border-color: #F5620A;
+      background: #FFF0E8;
+      color: #C44A00;
     }
     #page-lunch .name-btn.ordered .ordered-label {
-      color: #388e3c;
+      color: #D95500;
       opacity: 1;
     }
     #page-lunch .name-btn.selected {
-      background: var(--primary);
-      border-color: var(--primary);
+      background: #F5620A;
+      border-color: #F5620A;
       color: white;
-      box-shadow: 0 0 0 3px rgba(139,26,26,0.18);
+      box-shadow: 0 0 0 3px rgba(245,98,10,0.18);
     }
     #page-lunch .name-btn.selected.ordered {
-      background: var(--primary);
-      border-color: var(--primary);
+      background: #F5620A;
+      border-color: #F5620A;
       color: white;
-      box-shadow: 0 0 0 3px rgba(139,26,26,0.18);
+      box-shadow: 0 0 0 3px rgba(245,98,10,0.18);
     }
     #page-lunch .name-btn.selected .ordered-label {
       color: rgba(255,255,255,0.85);
@@ -190,6 +193,35 @@
       font-size: 14px; padding: 0; line-height: 1; margin-left: 1px;
     }
     .lunch-name-tag button:hover { color: var(--primary); }
+    .lunch-join-btn {
+      font-size: 11px; font-weight: 700;
+      padding: 3px 11px; border-radius: 20px;
+      border: 1.5px solid var(--primary);
+      background: none; color: var(--primary);
+      cursor: pointer; font-family: inherit;
+      transition: all 0.15s; margin-left: 4px;
+    }
+    .lunch-join-btn:hover { background: var(--primary); color: white; }
+
+    /* ── 점심 페이지 오렌지 테마 전역 오버라이드 ── */
+    #page-lunch .day-tab.today { border-color: #F5A060; }
+    #page-lunch .day-tab.today .day-num { color: #F5620A; }
+    #page-lunch .day-tab.active { background: #F5620A; border-color: #F5620A; }
+    #page-lunch .week-nav-btn:hover { border-color: #F5620A; color: #F5620A; }
+    #page-lunch .lunch-opt-btn.on { background: #F5620A; border-color: #F5620A; }
+    #page-lunch .lunch-opt-btn:hover:not(.on) { border-color: #F5620A; color: #F5620A; }
+    #page-lunch .lunch-opt-img-btn.on { border-color: #F5620A !important; }
+    #page-lunch .lunch-opt-img-btn.on .opt-name { color: #F5620A; }
+    #page-lunch .lunch-name-tag { background: #FFF0E8; color: #C44A00; }
+    #page-lunch .lunch-name-tag button:hover { color: #F5620A; }
+    #page-lunch .lunch-join-btn { border-color: #F5620A; color: #F5620A; }
+    #page-lunch .lunch-join-btn:hover { background: #F5620A; color: white; }
+    #page-lunch .lunch-note-input:focus { border-color: #F5620A; background: #FFF5EE; }
+    /* 공휴일은 active/today 여부와 무관하게 항상 비활성 회색 */
+    #page-lunch .day-tab.holiday,
+    #page-lunch .day-tab.holiday.active,
+    #page-lunch .day-tab.today.holiday { background: #f0ebe8 !important; border-color: #e0d0c8 !important; }
+    #page-lunch .day-tab.holiday .day-num { color: #333333 !important; }
 
     .container { max-width: 480px; margin: 0 auto; padding: 14px 14px 0; }
 
@@ -501,7 +533,7 @@
     .opt-img-area {
       width: 100%;
       height: 76px;
-      background: #f5ebe5;
+      background: #f1f1f1;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -509,7 +541,7 @@
       flex-shrink: 0;
     }
     .opt-img { width: 100%; height: 100%; object-fit: cover; }
-    .opt-plus-icon { font-size: 22px; color: #c0a090; }
+    .opt-plus-icon { font-size: 22px; color: #a5a5a5; }
     .opt-name { padding: 7px 6px; font-size: 13px; font-weight: 600; color: var(--text); text-align: center; }
     .opt-img-action-btn {
       position: absolute;
@@ -600,11 +632,11 @@
       margin-bottom: 0;
       padding: 10px 14px;
       border-radius: 10px;
-      border: 1.5px solid var(--border);
+      border: 1.5px solid #d5d5d5;
       font-size: 14px;
       font-family: inherit;
       color: var(--text);
-      background: #fdf0eb;
+      background: #f1f1f1;
       outline: none;
       transition: border-color 0.15s;
     }
@@ -632,7 +664,7 @@
 <body>
 
 <header>
-  <h1>☕ SI 팀</h1>
+  <h1>☕ SI Team Orders</h1>
   <div class="header-bottom">
     <span class="conn-info"><span class="conn-dot" id="connDot"></span><span id="connStatus">연결 중...</span></span>
   </div>
@@ -921,6 +953,7 @@ let sel = null, temp = null, size = null, bean = null, extras = [];
 let orders = [];
 
 function init() {
+  selectedName = getMyName() || null; // 저장된 이름 자동 선택
   loadLocal();
   attachOrderListener();
   renderCafeTabs();
@@ -1288,6 +1321,7 @@ let lunchRef          = null;
 let cafeImages        = {};   // { 이리오너라: 'data:image/...', ... }
 let cafeImagesRef     = null;
 let currentImageOpt   = null; // 이미지 메뉴 열린 옵션명
+let lunchJoinMode     = false; // 함께해요 버튼으로 참여 시 opts 활성화 억제
 
 // 오늘은 여기 어때요?|노트 형태 파싱
 function getChoiceBase(val) { return val ? val.split('|')[0] : null; }
@@ -1316,21 +1350,26 @@ function getWeekDays(monday) {
   });
 }
 
+function getWeekTarget(days) {
+  const todayStr = formatDate(new Date());
+  const todayInWeek = days.find(d => formatDate(d) === todayStr);
+  return todayInWeek || days.find(d => !HOLIDAYS[formatDate(d)]) || days[0];
+}
 function prevWeek() {
   const m = new Date(currentWeekMonday);
   m.setDate(m.getDate() - 7);
   currentWeekMonday = m;
-  switchLunchDay(formatDate(m));
+  switchLunchDay(formatDate(getWeekTarget(getWeekDays(m))));
 }
 function nextWeek() {
   const m = new Date(currentWeekMonday);
   m.setDate(m.getDate() + 7);
   currentWeekMonday = m;
-  switchLunchDay(formatDate(m));
+  switchLunchDay(formatDate(getWeekTarget(getWeekDays(m))));
 }
 function switchLunchDay(dateStr) {
   selectedLunchDate = new Date(dateStr + 'T00:00:00');
-  lunchSelectedName = null;
+  lunchSelectedName = getMyName() || null; // 날짜 전환 시에도 내 이름 유지
   lunchChoices = {};
   renderWeekTabs();
   initLunchDay();
@@ -1365,6 +1404,7 @@ function renderWeekTabs() {
 }
 
 function initLunch() {
+  if (!lunchSelectedName) lunchSelectedName = getMyName() || null; // 저장된 이름 자동 선택
   if (!currentWeekMonday) {
     currentWeekMonday = getThisMonday();
     selectedLunchDate = new Date();
@@ -1423,7 +1463,7 @@ function renderLunchOpts() {
   let html = '';
   LUNCH_OPTIONS.forEach(opt => {
     const isFull = opt === '오늘은 여기 어때요?';
-    const isOn   = currentBase === opt;
+    const isOn   = currentBase === opt && !(lunchJoinMode && opt === '오늘은 여기 어때요?');
 
     if (IMAGE_OPTS.has(opt)) {
       // 이미지 첨부 가능한 버튼 (이리오너라 / 굿모닝 / 가톨릭회관)
@@ -1469,6 +1509,13 @@ function selectLunch(opt) {
 
 function cancelLunchChoice(name) {
   lunchRef.child(name).set(null);
+}
+
+function joinLunch() {
+  if (!lunchSelectedName) { toast('이름을 먼저 선택해주세요'); return; }
+  lunchJoinMode = true;
+  lunchRef.child(lunchSelectedName).set('오늘은 여기 어때요?');
+  lunchJoinMode = false;
 }
 
 function saveLunchNote() {
@@ -1608,10 +1655,13 @@ function renderLunchResult() {
         const cancelBtn = opt !== '미선택' ? `<button onclick="cancelLunchChoice('${n}')">×</button>` : '';
         return `<span class="lunch-name-tag">${n}${note}${cancelBtn}</span>`;
       }).join('');
+      const joinBtn = opt === '오늘은 여기 어때요?'
+        ? `<button class="lunch-join-btn" onclick="joinLunch()">함께해요</button>`
+        : '';
       return `
         <div class="lunch-result-row">
           <div class="lunch-result-label">
-            ${opt} <span class="lunch-count">${groups[opt].length}명</span>
+            ${opt} <span class="lunch-count">${groups[opt].length}명</span>${joinBtn}
           </div>
           <div class="lunch-result-names">${nameTags}</div>
         </div>`;
