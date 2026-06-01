@@ -11,6 +11,7 @@
   <style>
     :root {
       --primary: #8B1A1A;
+      --cafe-color: var(--primary);
       --bg: #fdf5f0;
       --card: #ffffff;
       --border: #e8d5c8;
@@ -55,8 +56,8 @@
       color: #b08080;
       transition: all 0.15s;
     }
-    .cafe-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
-    .cafe-tab:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
+    .cafe-tab.active { background: var(--cafe-color); border-color: var(--cafe-color); color: white; }
+    .cafe-tab:hover:not(.active) { border-color: var(--cafe-color); color: var(--cafe-color); }
     .conn-info { font-size: 11px; color: #b08080; }
 
     /* 페이지 탭 네비게이션 */
@@ -272,7 +273,7 @@
       gap: 3px;
       position: relative;
     }
-    .name-btn:hover { border-color: var(--primary); color: var(--primary); background: #fff5f0; }
+    .name-btn:hover { border-color: var(--cafe-color); color: var(--cafe-color); background: #fff5f0; }
     .name-grid-outer { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
     .name-grid-outer > .name-grid { display: contents; }
     .name-btn-del {
@@ -308,7 +309,7 @@
       text-align: center; line-height: 1.4; pointer-events: none;
       transition: opacity 0.1s;
     }
-    .name-btn.selected { background: var(--primary); border-color: var(--primary); color: white; }
+    .name-btn.selected { background: var(--cafe-color); border-color: var(--cafe-color); color: white; }
     .name-btn.ordered { border-color: #c0786a; background: #fff0ec; color: var(--primary); }
     .ordered-label {
       font-size: 9px;
@@ -336,7 +337,7 @@
       color: var(--muted);
       transition: all 0.15s;
     }
-    .tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+    .tab.active { background: var(--cafe-color); border-color: var(--cafe-color); color: white; }
 
     /* Menu items */
     .menu-item {
@@ -359,7 +360,7 @@
       align-items: center;
       gap: 5px;
     }
-    .star-icon { color: var(--primary); font-size: 11px; }
+    .star-icon { color: var(--cafe-color); font-size: 11px; }
     .badge {
       font-size: 10px;
       padding: 1px 6px;
@@ -369,7 +370,7 @@
       font-weight: 600;
     }
     .item-note { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .item-price { font-size: 14px; font-weight: 700; color: var(--primary); white-space: nowrap; }
+    .item-price { font-size: 14px; font-weight: 700; color: var(--cafe-color); white-space: nowrap; }
 
     /* Options */
     .opt-group { margin-bottom: 14px; }
@@ -385,7 +386,7 @@
       color: var(--text);
       transition: all 0.15s;
     }
-    .opt-btn.on { background: var(--primary); border-color: var(--primary); color: white; }
+    .opt-btn.on { background: var(--cafe-color); border-color: var(--cafe-color); color: white; }
     .opt-btn.extra.on { background: #5c3d2e; border-color: #5c3d2e; color: white; }
 
     /* Buttons */
@@ -902,6 +903,7 @@ const MENUS = {
 
   '커피나인': {
     _config: {
+      color: '#000e66',
       noExtrasCategories: new Set(['더치커피','에이드']),
       beans: [
         { value:'sig',   label:'코리아나 (고소한, 산미)',    short:'코리아나',  price:0   },
@@ -1120,6 +1122,7 @@ function init() {
   selectedName = getMyName() || null; // 저장된 이름 자동 선택
   loadLocal();
   attachOrderListener();
+  applyCafeColor();
   renderCafeTabs();
   renderNameGrid();
   renderTabs();
@@ -1131,6 +1134,11 @@ function renderCafeTabs() {
   document.getElementById('cafeTabs').innerHTML = CAFE_LIST.map(c =>
     `<button class="cafe-tab ${c === currentCafe ? 'active' : ''}" onclick="switchCafe('${c}')">${c}</button>`
   ).join('');
+}
+
+function applyCafeColor() {
+  const color = getMenu()._config?.color || getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+  document.getElementById('page-coffee').style.setProperty('--cafe-color', color);
 }
 
 function switchCafe(name) {
@@ -1146,6 +1154,7 @@ function switchCafe(name) {
   document.getElementById('optCard').style.display = 'none';
   loadLocal();
   attachOrderListener();
+  applyCafeColor();
   renderCafeTabs();
   renderNameGrid();
   renderTabs();
