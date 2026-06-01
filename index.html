@@ -55,7 +55,7 @@
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
-      color: #b08080;
+      color: var(--tab-text, #b08080);
       transition: all 0.15s;
     }
     .cafe-tab.active { background: var(--cafe-color); border-color: var(--cafe-color); color: white; }
@@ -907,6 +907,7 @@ const MENUS = {
   '커피나인': {
     _config: {
       color: '#000e66',
+      textColor: '#8083b0',
       borderColor: '#c8d3e8',
       hoverBg: '#ecf0f9',
       noExtrasCategories: new Set(['더치커피','에이드']),
@@ -1140,7 +1141,8 @@ function renderCafeTabs() {
     const cfg    = MENUS[c]._config || {};
     const color  = cfg.color      || 'var(--primary)';
     const border = cfg.borderColor || 'var(--border)';
-    return `<button class="cafe-tab ${c === currentCafe ? 'active' : ''}" style="--tab-color:${color};--tab-border:${border}" onclick="switchCafe('${c}')">${c}</button>`;
+    const text   = cfg.textColor  || '#b08080';
+    return `<button class="cafe-tab ${c === currentCafe ? 'active' : ''}" style="--tab-color:${color};--tab-border:${border};--tab-text:${text}" onclick="switchCafe('${c}')">${c}</button>`;
   }).join('');
 }
 
