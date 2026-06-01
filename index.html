@@ -10,15 +10,47 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
   <style>
     :root {
-      --primary: #8B1A1A;
-      --cafe-color: var(--primary);
-      --cafe-border: var(--border);
-      --cafe-hover-bg: #fff5f0;
-      --bg: #fdf5f0;
-      --card: #ffffff;
-      --border: #e8d5c8;
-      --text: #2c1a1a;
-      --muted: #8a6a6a;
+      /* ── 글로벌 (공통) ── */
+      --primary: #8B1A1A;   /* 페이지 네비게이션 전용 */
+      --bg:      #fdf5f0;
+      --card:    #ffffff;
+      --border:  #e8d5c8;
+      --text:    #2c1a1a;
+      --muted:   #8a6a6a;
+
+      /* ── 테마 토큰 기본값 (소소) ── */
+      --accent:                #8B1A1A;
+      --accent-muted:          #b08080;
+      --accent-border:         #e8d5c8;
+      --accent-hover:          #fff5f0;
+      --accent-light:          #fbe8e0;
+      --accent-divider:        #f0e8e0;
+      --accent-extra:          #5c3d2e;
+      --accent-ordered-border: #c0786a;
+      --accent-ordered-bg:     #fff0ec;
+      --accent-ordered-text:   #8B1A1A;
+      --accent-tag-bg:         #f5e8e0;
+      --accent-tag-text:       #8B1A1A;
+      --accent-menu-hover:     #fdf0eb;
+      --accent-menu-selected:  #fbe8e0;
+    }
+
+    /* ── 점심 선택 테마 ── */
+    #page-lunch {
+      --accent:                #F5620A;
+      --accent-muted:          #8a6a6a;
+      --accent-border:         #d5d5d5;
+      --accent-hover:          #FFF0E8;
+      --accent-light:          #FFF5EE;
+      --accent-divider:        #f0e8e0;
+      --accent-extra:          #D95500;
+      --accent-ordered-border: #F5620A;
+      --accent-ordered-bg:     #FFF0E8;
+      --accent-ordered-text:   #C44A00;
+      --accent-tag-bg:         #FFF0E8;
+      --accent-tag-text:       #C44A00;
+      --accent-menu-hover:     #FFF0E8;
+      --accent-menu-selected:  #FFF5EE;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -58,8 +90,8 @@
       color: var(--tab-text, #b08080);
       transition: all 0.15s;
     }
-    .cafe-tab.active { background: var(--cafe-color); border-color: var(--cafe-color); color: white; }
-    .cafe-tab:hover:not(.active) { border-color: var(--tab-color, var(--cafe-color)); color: var(--tab-color, var(--cafe-color)); }
+    .cafe-tab.active { background: var(--accent); border-color: var(--accent); color: white; }
+    .cafe-tab:hover:not(.active) { border-color: var(--tab-color, var(--accent)); color: var(--tab-color, var(--accent)); }
     .conn-info { font-size: 11px; color: #b08080; }
 
     /* 페이지 탭 네비게이션 */
@@ -100,7 +132,7 @@
       padding: 4px 10px; cursor: pointer; font-size: 12px; color: var(--muted);
       transition: all 0.15s;
     }
-    .week-nav-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .week-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
     .day-tabs { display: flex; gap: 5px; }
     .day-tab {
       flex: 1; padding: 7px 2px; border-radius: 10px;
@@ -111,8 +143,8 @@
     .day-tab .day-num { font-size: 15px; font-weight: 700; color: var(--text); margin: 2px 0; }
     .day-tab .day-holi { font-size: 8px; color: #333333; line-height: 1.2; }
     .day-tab.today { border-color: #c0a090; }
-    .day-tab.today .day-num { color: var(--primary); }
-    .day-tab.active { background: var(--primary); border-color: var(--primary); }
+    .day-tab.today .day-num { color: var(--accent); }
+    .day-tab.active { background: var(--accent); border-color: var(--accent); }
     .day-tab.active .day-dow,
     .day-tab.active .day-num,
     .day-tab.active .day-holi { color: white !important; }
@@ -144,8 +176,8 @@
     }
     .lunch-opt-full { grid-column: 1 / -1; text-align: center; }
     .lunch-opt-btn:not(.lunch-opt-img-btn):not(.lunch-opt-full) { min-height: 80px; }
-    .lunch-opt-btn:hover:not(.on) { border-color: var(--primary); color: var(--primary); }
-    .lunch-opt-btn.on { background: var(--primary); border-color: var(--primary); color: white; font-weight: 700; }
+    .lunch-opt-btn:hover:not(.on) { border-color: var(--accent); color: var(--accent); }
+    .lunch-opt-btn.on { background: var(--accent); border-color: var(--accent); color: white; font-weight: 700; }
 
     /* 점심 이름 그리드 — 오렌지 테마 */
     #page-lunch .name-btn:hover { background: #FFF0E8; border-color: var(--border); color: var(--text); }
@@ -174,7 +206,7 @@
       color: rgba(255,255,255,0.85);
     }
 
-    .lunch-result-row { padding: 12px 0; border-bottom: 1px solid #f0e8e0; }
+    .lunch-result-row { padding: 12px 0; border-bottom: 1px solid var(--accent-divider); }
     .lunch-result-row:last-child { border-bottom: none; }
     .lunch-result-label { font-size: 15px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
     .lunch-count { font-size: 12px; color: var(--muted); font-weight: 400; }
@@ -184,27 +216,27 @@
       align-items: center;
       gap: 3px;
       padding: 6px 8px 6px 13px;
-      background: #f5e8e0;
+      background: var(--accent-tag-bg);
       border-radius: 20px;
       font-size: 13px;
       font-weight: 600;
-      color: var(--primary);
+      color: var(--accent-tag-text);
     }
     .lunch-name-tag button {
       background: none; border: none;
       color: #c0a090; cursor: pointer;
       font-size: 16px; padding: 2px 2px; line-height: 1; margin-left: 2px;
     }
-    .lunch-name-tag button:hover { color: var(--primary); }
+    .lunch-name-tag button:hover { color: var(--accent); }
     .lunch-join-btn {
       font-size: 12px; font-weight: 700;
       padding: 7px 16px; border-radius: 20px;
-      border: 1.5px solid var(--primary);
-      background: none; color: var(--primary);
+      border: 1.5px solid var(--accent);
+      background: none; color: var(--accent);
       cursor: pointer; font-family: inherit;
       transition: all 0.15s;
     }
-    .lunch-join-btn:hover { background: var(--primary); color: white; }
+    .lunch-join-btn:hover { background: var(--accent); color: white; }
     .lunch-result-sub { margin-top: 7px; padding-left: 10px; border-left: 2.5px solid #FFD0A8; }
     .lunch-sub-header {
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
@@ -212,22 +244,12 @@
     .lunch-sub-label { font-size: 14px; font-weight: 700; color: #F5620A; }
     .lunch-sub-names { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
 
-    /* ── 점심 페이지 오렌지 테마 전역 오버라이드 ── */
+    /* ── 점심 페이지 개별 오버라이드 (변수로 처리 안 되는 것만) ── */
     #page-lunch .day-tab.today { border-color: #F5A060; }
-    #page-lunch .day-tab.today .day-num { color: #F5620A; }
-    #page-lunch .day-tab.active { background: #F5620A; border-color: #F5620A; }
-    #page-lunch .week-nav-btn:hover { border-color: #F5620A; color: #F5620A; }
-    #page-lunch .lunch-opt-btn.on { background: #F5620A; border-color: #F5620A; }
-    #page-lunch .lunch-opt-btn:hover:not(.on) { border-color: #F5620A; color: #F5620A; }
-    #page-lunch .lunch-opt-img-btn.on { border-color: #F5620A !important; }
-    #page-lunch .lunch-opt-img-btn.on .opt-name { color: #F5620A; }
-    #page-lunch .lunch-name-tag { background: #FFF0E8; color: #C44A00; }
-    #page-lunch .lunch-name-tag button:hover { color: #F5620A; }
-    #page-lunch .lunch-join-btn { border-color: #F5620A; color: #F5620A; }
-    #page-lunch .lunch-join-btn:hover { background: #F5620A; color: white; }
-    #page-lunch .lunch-note-input:focus { border-color: #F5620A; background: #FFF5EE; }
-    #page-lunch .name-direct-wrap:hover { background: #FFF0E8 !important; border-color: var(--border); }
-    #page-lunch .name-direct-wrap.focused { border-color: #F5620A; }
+    #page-lunch .lunch-opt-img-btn.on .opt-name { color: var(--accent); }
+    #page-lunch .lunch-note-input:focus { border-color: var(--accent); background: var(--accent-light); }
+    #page-lunch .name-direct-wrap:hover { background: var(--accent-hover) !important; border-color: var(--border); }
+    #page-lunch .name-direct-wrap.focused { border-color: var(--accent); }
     /* 공휴일은 active/today 여부와 무관하게 항상 비활성 회색 */
     #page-lunch .day-tab.holiday,
     #page-lunch .day-tab.holiday.active,
@@ -261,7 +283,7 @@
     .name-btn {
       padding: 7px 4px;
       border-radius: 9px;
-      border: 1.5px solid var(--cafe-border);
+      border: 1.5px solid var(--accent-border);
       background: #fafafa;
       font-size: 13px;
       font-weight: 600;
@@ -275,7 +297,7 @@
       gap: 3px;
       position: relative;
     }
-    .name-btn:hover { border-color: var(--cafe-color); color: var(--cafe-color); background: var(--cafe-hover-bg); }
+    .name-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-hover); }
     .name-grid-outer { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
     .name-grid-outer > .name-grid { display: contents; }
     .name-btn-del {
@@ -311,8 +333,8 @@
       text-align: center; line-height: 1.4; pointer-events: none;
       transition: opacity 0.1s;
     }
-    .name-btn.selected { background: var(--cafe-color); border-color: var(--cafe-color); color: white; }
-    .name-btn.ordered { border-color: #c0786a; background: #fff0ec; color: var(--primary); }
+    .name-btn.selected { background: var(--accent); border-color: var(--accent); color: white; }
+    .name-btn.ordered { border-color: var(--accent-ordered-border); background: var(--accent-ordered-bg); color: var(--accent-ordered-text); }
     .ordered-label {
       font-size: 9px;
       font-weight: 700;
@@ -331,15 +353,15 @@
       flex-shrink: 0;
       padding: 5px 13px;
       border-radius: 20px;
-      border: 1.5px solid var(--cafe-border);
+      border: 1.5px solid var(--accent-border);
       background: var(--card);
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      color: var(--muted);
+      color: var(--accent-muted);
       transition: all 0.15s;
     }
-    .tab.active { background: var(--cafe-color); border-color: var(--cafe-color); color: white; }
+    .tab.active { background: var(--accent); border-color: var(--accent); color: white; }
 
     /* Menu items */
     .menu-item {
@@ -352,8 +374,8 @@
       transition: background 0.12s;
       margin: 0 -10px;
     }
-    .menu-item:hover { background: #fdf0eb; }
-    .menu-item.selected { background: #fbe8e0; }
+    .menu-item:hover { background: var(--accent-menu-hover); }
+    .menu-item.selected { background: var(--accent-menu-selected); }
     .item-left { flex: 1; }
     .item-name {
       font-size: 14px;
@@ -362,17 +384,17 @@
       align-items: center;
       gap: 5px;
     }
-    .star-icon { color: var(--cafe-color); font-size: 11px; }
+    .star-icon { color: var(--accent); font-size: 11px; }
     .badge {
       font-size: 10px;
       padding: 1px 6px;
       border-radius: 9px;
-      background: #f0e4dc;
-      color: var(--muted);
+      background: #2c1a1a;
+      color: white;
       font-weight: 600;
     }
     .item-note { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .item-price { font-size: 14px; font-weight: 700; color: var(--cafe-color); white-space: nowrap; }
+    .item-price { font-size: 14px; font-weight: 700; color: var(--accent); white-space: nowrap; }
 
     /* Options */
     .opt-group { margin-bottom: 14px; }
@@ -381,22 +403,21 @@
     .opt-btn {
       padding: 6px 14px;
       border-radius: 20px;
-      border: 1.5px solid var(--cafe-border);
+      border: 1.5px solid var(--accent-border);
       background: var(--card);
       font-size: 13px;
       cursor: pointer;
       color: var(--text);
       transition: all 0.15s;
     }
-    .opt-btn:not(.on):hover { background: var(--cafe-hover-bg); border-color: var(--cafe-color); }
-    .opt-btn.on { background: var(--cafe-color); border-color: var(--cafe-color); color: white; }
-    .opt-btn.extra.on { background: #5c3d2e; border-color: #5c3d2e; color: white; }
+    .opt-btn:not(.on):hover { background: var(--accent-hover); border-color: var(--accent); }
+    .opt-btn.on { background: var(--accent-extra); border-color: var(--accent-extra); color: white; }
 
     /* Buttons */
     .btn-add {
       width: 100%;
       padding: 13px;
-      background: var(--primary);
+      background: var(--accent);
       color: white;
       border: none;
       border-radius: 10px;
@@ -414,11 +435,11 @@
       align-items: flex-start;
       justify-content: space-between;
       padding: 9px 0;
-      border-bottom: 1px solid #f0e8e0;
+      border-bottom: 1px solid var(--accent-divider);
       gap: 8px;
     }
     .order-item:last-child { border-bottom: none; }
-    .order-who { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 2px; }
+    .order-who { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 2px; }
     .order-drink { font-size: 14px; font-weight: 500; }
     .order-opts { font-size: 11px; color: var(--muted); margin-top: 2px; }
     .order-right { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
@@ -433,7 +454,7 @@
       line-height: 1;
       transition: color 0.12s;
     }
-    .btn-del:hover { color: var(--primary); }
+    .btn-del:hover { color: var(--accent); }
 
     .name-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
     .name-tag {
@@ -441,11 +462,11 @@
       align-items: center;
       gap: 3px;
       padding: 3px 9px 3px 10px;
-      background: #f5e8e0;
+      background: var(--accent-tag-bg);
       border-radius: 20px;
       font-size: 12px;
       font-weight: 700;
-      color: var(--primary);
+      color: var(--accent-tag-text);
     }
     .name-tag button {
       background: none;
@@ -457,12 +478,12 @@
       line-height: 1;
       margin-left: 1px;
     }
-    .name-tag button:hover { color: var(--primary); }
+    .name-tag button:hover { color: var(--accent); }
     .order-count {
       font-size: 11px;
       font-weight: 700;
       color: white;
-      background: var(--primary);
+      background: var(--accent);
       border-radius: 10px;
       padding: 1px 7px;
       margin-left: 4px;
@@ -483,7 +504,7 @@
     .btn-copy {
       width: 100%;
       padding: 13px;
-      background: #4a3728;
+      background: var(--accent);
       color: white;
       border: none;
       border-radius: 10px;
@@ -507,7 +528,7 @@
       margin-top: 8px;
       transition: all 0.15s;
     }
-    .btn-reset:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-reset:hover { border-color: var(--accent); color: var(--accent); }
     .conn-dot {
       display: inline-block;
       width: 6px; height: 6px;
@@ -531,7 +552,7 @@
     .history-toggle .arrow.open { transform: rotate(180deg); }
 
     .history-entry {
-      border-bottom: 1px solid #f0e8e0;
+      border-bottom: 1px solid var(--accent-divider);
     }
     .history-entry:last-child { border-bottom: none; }
     .history-header {
@@ -542,8 +563,8 @@
       cursor: pointer;
       user-select: none;
     }
-    .history-header:hover .history-date { color: #a03030; }
-    .history-date { font-size: 13px; font-weight: 700; color: var(--primary); transition: color 0.12s; }
+    .history-header:hover .history-date { opacity: 0.75; }
+    .history-date { font-size: 13px; font-weight: 700; color: var(--accent); transition: color 0.12s; }
     .history-arrow { font-size: 10px; color: var(--muted); transition: transform 0.2s; }
     .history-arrow.open { transform: rotate(180deg); }
     .history-body { padding-bottom: 10px; }
@@ -560,7 +581,7 @@
       margin-top: 4px;
       transition: all 0.15s;
     }
-    .btn-copy-hist:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-copy-hist:hover { border-color: var(--accent); color: var(--accent); }
 
     /* 이미지 첨부 버튼 */
     .lunch-opt-img-btn {
@@ -574,7 +595,7 @@
     }
     .lunch-opt-img-btn.on {
       background: var(--card) !important;
-      border-color: var(--primary);
+      border-color: var(--accent);
       border-width: 2.5px;
     }
     .lunch-opt-img-btn.on .opt-name { color: var(--primary); font-weight: 700; }
@@ -906,10 +927,21 @@ const MENUS = {
 
   '커피나인': {
     _config: {
-      color: '#000e66',
-      textColor: '#8083b0',
-      borderColor: '#c8d3e8',
-      hoverBg: '#ecf0f9',
+      accent:               '#000e66',
+      accentMuted:          '#8083b0',
+      accentBorder:         '#c8d3e8',
+      accentHover:          '#ecf0f9',
+      accentLight:          '#e8edf8',
+      accentDivider:        '#dce3f0',
+      accentExtra:          '#1a3080',
+      accentOrderedBorder:  '#8083b0',
+      accentOrderedBg:      '#e8edf8',
+      accentOrderedText:    '#000e66',
+      accentTagBg:          '#e8edf8',
+      accentTagText:        '#000e66',
+      accentMenuHover:      '#ecf0f9',
+      accentMenuSelected:   '#e8edf8',
+      textColor:            '#8083b0',   /* cafe-tab 전용 */
       noExtrasCategories: new Set(['더치커피','에이드']),
       beans: [
         { value:'sig',   label:'코리아나 (고소한, 산미)',    short:'코리아나',  price:0   },
@@ -1139,19 +1171,30 @@ function init() {
 function renderCafeTabs() {
   document.getElementById('cafeTabs').innerHTML = CAFE_LIST.map(c => {
     const cfg    = MENUS[c]._config || {};
-    const color  = cfg.color      || 'var(--primary)';
-    const border = cfg.borderColor || 'var(--border)';
+    const color  = cfg.accent       || 'var(--primary)';
+    const border = cfg.accentBorder || 'var(--border)';
     const text   = cfg.textColor  || '#b08080';
     return `<button class="cafe-tab ${c === currentCafe ? 'active' : ''}" style="--tab-color:${color};--tab-border:${border};--tab-text:${text}" onclick="switchCafe('${c}')">${c}</button>`;
   }).join('');
 }
 
 function applyCafeColor() {
-  const cfg   = getMenu()._config || {};
-  const el    = document.getElementById('page-coffee');
-  el.style.setProperty('--cafe-color',    cfg.color      || 'var(--primary)');
-  el.style.setProperty('--cafe-border',   cfg.borderColor || 'var(--border)');
-  el.style.setProperty('--cafe-hover-bg', cfg.hoverBg    || '#fff5f0');
+  const cfg = getMenu()._config || {};
+  const el  = document.getElementById('page-coffee');
+  el.style.setProperty('--accent',               cfg.accent              || 'var(--primary)');
+  el.style.setProperty('--accent-muted',         cfg.accentMuted         || '#b08080');
+  el.style.setProperty('--accent-border',        cfg.accentBorder        || 'var(--border)');
+  el.style.setProperty('--accent-hover',         cfg.accentHover         || '#fff5f0');
+  el.style.setProperty('--accent-light',         cfg.accentLight         || '#fbe8e0');
+  el.style.setProperty('--accent-divider',       cfg.accentDivider       || '#f0e8e0');
+  el.style.setProperty('--accent-extra',         cfg.accentExtra         || '#5c3d2e');
+  el.style.setProperty('--accent-ordered-border',cfg.accentOrderedBorder || '#c0786a');
+  el.style.setProperty('--accent-ordered-bg',    cfg.accentOrderedBg     || '#fff0ec');
+  el.style.setProperty('--accent-ordered-text',  cfg.accentOrderedText   || 'var(--primary)');
+  el.style.setProperty('--accent-tag-bg',        cfg.accentTagBg         || '#f5e8e0');
+  el.style.setProperty('--accent-tag-text',      cfg.accentTagText       || 'var(--primary)');
+  el.style.setProperty('--accent-menu-hover',    cfg.accentMenuHover     || '#fdf0eb');
+  el.style.setProperty('--accent-menu-selected', cfg.accentMenuSelected  || '#fbe8e0');
 }
 
 function switchCafe(name) {
