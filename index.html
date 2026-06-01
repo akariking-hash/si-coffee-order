@@ -57,7 +57,7 @@
       transition: all 0.15s;
     }
     .cafe-tab.active { background: var(--cafe-color); border-color: var(--cafe-color); color: white; }
-    .cafe-tab:hover:not(.active) { border-color: var(--cafe-color); color: var(--cafe-color); }
+    .cafe-tab:hover:not(.active) { border-color: var(--tab-color, var(--cafe-color)); color: var(--tab-color, var(--cafe-color)); }
     .conn-info { font-size: 11px; color: #b08080; }
 
     /* 페이지 탭 네비게이션 */
@@ -1131,9 +1131,10 @@ function init() {
 }
 
 function renderCafeTabs() {
-  document.getElementById('cafeTabs').innerHTML = CAFE_LIST.map(c =>
-    `<button class="cafe-tab ${c === currentCafe ? 'active' : ''}" onclick="switchCafe('${c}')">${c}</button>`
-  ).join('');
+  document.getElementById('cafeTabs').innerHTML = CAFE_LIST.map(c => {
+    const color = MENUS[c]._config?.color || 'var(--primary)';
+    return `<button class="cafe-tab ${c === currentCafe ? 'active' : ''}" style="--tab-color:${color}" onclick="switchCafe('${c}')">${c}</button>`;
+  }).join('');
 }
 
 function applyCafeColor() {
