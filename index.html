@@ -901,39 +901,40 @@ const MENUS = {
   }, // 소소 끝
 
   '커피나인': {
-    beans: [
-      { value:'sig',   label:'코리아나 (고소한, 산미)',    short:'코리아나',  price:0   },
-      { value:'dark',  label:'명동 (진한, 다크초콜릿)',     short:'명동',      price:0   },
-      { value:'decaf', label:'디카페인 (+900원)',           short:'디카페인',  price:900 },
-    ],
-    extras: [
-      { label:'샷 추가',    price:600 },
-      { label:'크림추가',   price:1000 },
-      { label:'오트밀크',   price:500 },
-      { label:'연하게',     price:0 },
-      { label:'덜달게',     price:0 },
-      { label:'설탕시럽',   price:0 },
-    ],
+    _config: {
+      noExtrasCategories: new Set(['더치커피','에이드']),
+      beans: [
+        { value:'sig',   label:'코리아나 (고소한, 산미)',    short:'코리아나',  price:0   },
+        { value:'dark',  label:'명동 (진한, 다크초콜릿)',     short:'명동',      price:0   },
+        { value:'decaf', label:'디카페인 (+900원)',           short:'디카페인',  price:900 },
+      ],
+      extras: [
+        { label:'샷 추가',    price:600 },
+        { label:'크림추가',   price:1000 },
+        { label:'오트밀크',   price:500, nameContains:'라떼' },
+        { label:'연하게',     price:0 },
+        { label:'덜달게',     price:0 },
+        { label:'설탕시럽',   price:0 },
+      ],
+    },
     "커피": [
-      { name:"에스프레소",               price:3500, tempOnly:"HOT" },
+      { name:"에스프레소",               price:3500, tempOnly:"HOT", hasBean:true },
       { name:"아메리카노",               price:3500, hasBean:true },
       { name:"카페라떼",                 price:4500, hasBean:true },
-      { name:"바닐라라떼",               price:4900 },
-      { name:"블랙모카라떼",             price:4900 },
-      { name:"돌체라떼",                 price:4900 },
-      { name:"명동크림프레소",           price:4500, tempOnly:"HOT" },
-      { name:"루비아메리카노",           price:4500 },
-      { name:"루비초콜릿라떼",           price:4900 },
-      { name:"프리즈노",                 price:4500, tempOnly:"ICE", star:true },
-      { name:"티라미수프레소",           price:5500, tempOnly:"ICE", star:true },
-    ],
-    "시그니처": [
-      { name:"나인슈페너",               price:5500 },
-      { name:"나인라떼",                 price:6500, star:true },
-      { name:"코리아라떼",               price:6500, star:true },
-      { name:"뉴기니바나나카페라떼",     price:4900 },
-      { name:"슈레디드코코넛카페라떼",   price:4900 },
-      { name:"프레즈딸기카페라떼",       price:4900 },
+      { name:"바닐라라떼",               price:4900, hasBean:true },
+      { name:"블랙모카라떼",             price:4900, hasBean:true },
+      { name:"돌체라떼",                 price:4900, hasBean:true },
+      { name:"명동크림프레소",           price:4500, tempOnly:"HOT", star:true, hasBean:true },
+      { name:"나인슈페너",               price:5500, star:true, hasBean:true },
+      { name:"나인라떼",                 price:6500, star:true, hasBean:true },
+      { name:"코리아라떼",               price:6500, star:true, hasBean:true },
+      { name:"프리즈노",                 price:4500, tempOnly:"ICE", star:true, hasBean:true },
+      { name:"뉴기니바나나카페라떼",     price:4900, hasBean:true },
+      { name:"슈레디드코코넛카페라떼",   price:4900, hasBean:true },
+      { name:"프레즈딸기카페라떼",       price:4900, hasBean:true },
+      { name:"루비아메리카노",           price:4500, hasBean:true },
+      { name:"루비초콜릿라떼",           price:4900, hasBean:true },
+      { name:"티라미수프레소",           price:5500, tempOnly:"ICE", hasBean:true },
     ],
     "티베리에이션": [
       { name:"히비스 루비",                        price:5900 },
@@ -1044,8 +1045,8 @@ db.ref('.info/connected').on('value', snap => {
 const CAFE_LIST = Object.keys(MENUS); // ['소소', '커피나인', ...]
 let currentCafe = CAFE_LIST[0];
 function getMenu()       { return MENUS[currentCafe]; }
-function getCafeBeans()  { return getMenu().beans  || DEFAULT_BEANS; }
-function getCafeExtras() { return getMenu().extras || EXTRAS; }
+function getCafeBeans()  { return getMenu()._config?.beans  || DEFAULT_BEANS; }
+function getCafeExtras() { return getMenu()._config?.extras || EXTRAS; }
 function getLsKey() { return `si-coffee-orders-${currentCafe}`; }
 
 let orderRef   = db.ref(`si-coffee/${currentCafe}/orders`);
@@ -1107,7 +1108,7 @@ function resetOrders() {
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-let cats = Object.keys(getMenu());
+let cats = Object.keys(getMenu()).filter(k => Array.isArray(getMenu()[k]));
 let cat  = cats[0];
 let selectedName = null;
 
@@ -1136,7 +1137,7 @@ function switchCafe(name) {
   if (name === currentCafe) return;
   orderRef.off();                              // 기존 리스너 해제
   currentCafe = name;
-  cats = Object.keys(getMenu());
+  cats = Object.keys(getMenu()).filter(k => Array.isArray(getMenu()[k]));
   cat  = cats[0];
   orderRef   = db.ref(`si-coffee/${currentCafe}/orders`);
   historyRef = db.ref(`si-coffee/${currentCafe}/history`);
@@ -1246,16 +1247,19 @@ function renderOpts() {
       </div></div>`;
   }
 
-  // Extras (카페별)
-  html += `<div class="opt-group">
-    <div class="opt-label">추가 옵션</div>
-    <div class="opt-btns">
-      ${getCafeExtras().map((e,i) =>
-        `<button class="opt-btn extra ${extras.includes(i)?'on':''}" onclick="toggleExtra(${i})">
-          ${e.label}${e.price > 0 ? ' +' + e.price.toLocaleString() : ''}
-        </button>`
-      ).join('')}
-    </div></div>`;
+  // Extras (카페별 — 카테고리에 따라 숨김 가능)
+  if (!getMenu()._config?.noExtrasCategories?.has(cat)) {
+    html += `<div class="opt-group">
+      <div class="opt-label">추가 옵션</div>
+      <div class="opt-btns">
+        ${getCafeExtras().map((e,i) => {
+          if (e.nameContains && !sel.name.includes(e.nameContains)) return '';
+          return `<button class="opt-btn extra ${extras.includes(i)?'on':''}" onclick="toggleExtra(${i})">
+            ${e.label}${e.price > 0 ? ' +' + e.price.toLocaleString() : ''}
+          </button>`;
+        }).join('')}
+      </div></div>`;
+  }
 
   document.getElementById('optGroups').innerHTML = html;
 }
