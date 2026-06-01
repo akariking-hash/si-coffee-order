@@ -12,6 +12,8 @@
     :root {
       --primary: #8B1A1A;
       --cafe-color: var(--primary);
+      --cafe-border: var(--border);
+      --cafe-hover-bg: #fff5f0;
       --bg: #fdf5f0;
       --card: #ffffff;
       --border: #e8d5c8;
@@ -48,7 +50,7 @@
     .cafe-tab {
       padding: 4px 14px;
       border-radius: 20px;
-      border: 1.5px solid var(--border);
+      border: 1.5px solid var(--cafe-border);
       background: transparent;
       font-size: 12px;
       font-weight: 700;
@@ -259,7 +261,7 @@
     .name-btn {
       padding: 7px 4px;
       border-radius: 9px;
-      border: 1.5px solid var(--border);
+      border: 1.5px solid var(--cafe-border);
       background: #fafafa;
       font-size: 13px;
       font-weight: 600;
@@ -273,7 +275,7 @@
       gap: 3px;
       position: relative;
     }
-    .name-btn:hover { border-color: var(--cafe-color); color: var(--cafe-color); background: #fff5f0; }
+    .name-btn:hover { border-color: var(--cafe-color); color: var(--cafe-color); background: var(--cafe-hover-bg); }
     .name-grid-outer { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
     .name-grid-outer > .name-grid { display: contents; }
     .name-btn-del {
@@ -329,7 +331,7 @@
       flex-shrink: 0;
       padding: 5px 13px;
       border-radius: 20px;
-      border: 1.5px solid var(--border);
+      border: 1.5px solid var(--cafe-border);
       background: var(--card);
       font-size: 12px;
       font-weight: 600;
@@ -379,13 +381,14 @@
     .opt-btn {
       padding: 6px 14px;
       border-radius: 20px;
-      border: 1.5px solid var(--border);
+      border: 1.5px solid var(--cafe-border);
       background: var(--card);
       font-size: 13px;
       cursor: pointer;
       color: var(--text);
       transition: all 0.15s;
     }
+    .opt-btn:not(.on):hover { background: var(--cafe-hover-bg); border-color: var(--cafe-color); }
     .opt-btn.on { background: var(--cafe-color); border-color: var(--cafe-color); color: white; }
     .opt-btn.extra.on { background: #5c3d2e; border-color: #5c3d2e; color: white; }
 
@@ -904,6 +907,8 @@ const MENUS = {
   '커피나인': {
     _config: {
       color: '#000e66',
+      borderColor: '#c8d3e8',
+      hoverBg: '#ecf0f9',
       noExtrasCategories: new Set(['더치커피','에이드']),
       beans: [
         { value:'sig',   label:'코리아나 (고소한, 산미)',    short:'코리아나',  price:0   },
@@ -1138,8 +1143,11 @@ function renderCafeTabs() {
 }
 
 function applyCafeColor() {
-  const color = getMenu()._config?.color || getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
-  document.getElementById('page-coffee').style.setProperty('--cafe-color', color);
+  const cfg   = getMenu()._config || {};
+  const el    = document.getElementById('page-coffee');
+  el.style.setProperty('--cafe-color',    cfg.color      || 'var(--primary)');
+  el.style.setProperty('--cafe-border',   cfg.borderColor || 'var(--border)');
+  el.style.setProperty('--cafe-hover-bg', cfg.hoverBg    || '#fff5f0');
 }
 
 function switchCafe(name) {
