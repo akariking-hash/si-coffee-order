@@ -217,7 +217,7 @@
     .lunch-name-tag button:hover { color: var(--accent); }
     .lunch-join-btn {
       font-size: 12px; font-weight: 700;
-      padding: 7px 16px; border-radius: 20px;
+      padding: 7px 16px; border-radius: 6px;
       border: 1.5px solid var(--accent);
       background: none; color: var(--accent);
       cursor: pointer; font-family: inherit;
@@ -2099,7 +2099,7 @@ function renderLunchResult() {
               <div class="lunch-result-label">
                 <span>${label}</span>
                 <span class="lunch-count">${names.length}명</span>
-                <button class="lunch-join-btn" onclick="joinLunch('${safeNote}')">함께해요</button>
+                <button class="lunch-join-btn" style="margin-left:auto" onclick="joinLunch('${safeNote}')">함께해요</button>
               </div>
               <div class="lunch-result-names">${tags}</div>
             </div>`
@@ -2110,7 +2110,7 @@ function renderLunchResult() {
         const note = personNotes[n] ? `(${personNotes[n]})` : '';
         return `<span class="lunch-name-tag">${n}${note}<button onclick="cancelLunchChoice('${n}')">×</button></span>`;
       }).join('');
-      const JOIN_TEXT = { '이리오너라':'함께해요', '굿모닝':'함께해요', '가톨릭회관':'함께해요', '도시락':'저도요', '약속':'저도요', '연차':'저도 쉬어요' };
+      const JOIN_TEXT = { '이리오너라':'함께해요', '굿모닝':'함께해요', '가톨릭회관':'함께해요', '도시락':'저도요', '약속':'저도요', '연차':'저도요' };
       const joinText = JOIN_TEXT[opt];
       const safeOpt = encodeURIComponent(opt);
       rowItems.push({
@@ -2120,7 +2120,7 @@ function renderLunchResult() {
             <div class="lunch-result-label">
               <span>${opt}</span>
               <span class="lunch-count">${groups[opt].length}명</span>
-              ${joinText ? `<button class="lunch-join-btn" onclick="joinLunchOpt(decodeURIComponent('${safeOpt}'))">${joinText}</button>` : ''}
+              ${joinText ? `<button class="lunch-join-btn" style="margin-left:auto" onclick="joinLunchOpt(decodeURIComponent('${safeOpt}'))">${joinText}</button>` : ''}
             </div>
             <div class="lunch-result-names">${nameTags}</div>
           </div>`
