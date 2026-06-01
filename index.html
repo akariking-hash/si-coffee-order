@@ -1724,9 +1724,18 @@ function attachCafeImagesListener() {
   if (cafeImagesWeek !== weekKey) {
     if (cafeImagesRef) cafeImagesRef.off();
     cafeImagesWeek = weekKey;
+
+    // 구버전 경로에서 기존 이미지 한 번 읽어 병합 (하위 호환)
+    db.ref(`si-cafe-images/${weekKey}`).once('value', snap => {
+      const legacy = snap.val() || {};
+      weeklyImages = { ...legacy, ...weeklyImages };
+      cafeImages = { ...weeklyImages, ...dailyImages };
+      renderLunchOpts();
+    });
+
     cafeImagesRef = db.ref(`si-cafe-images/weekly/${weekKey}`);
     cafeImagesRef.on('value', snap => {
-      weeklyImages = snap.val() || {};
+      weeklyImages = { ...weeklyImages, ...(snap.val() || {}) };
       cafeImages = { ...weeklyImages, ...dailyImages };
       renderLunchOpts();
     });
