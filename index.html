@@ -1726,9 +1726,12 @@ function attachCafeImagesListener() {
     cafeImagesWeek = weekKey;
 
     // 구버전 경로에서 기존 이미지 한 번 읽어 병합 (하위 호환)
+    // 일별 리셋 옵션(이리오너라)은 제외 — daily 경로에서만 관리
     db.ref(`si-cafe-images/${weekKey}`).once('value', snap => {
       const legacy = snap.val() || {};
-      weeklyImages = { ...legacy, ...weeklyImages };
+      Object.entries(legacy).forEach(([k, v]) => {
+        if (!DAILY_IMAGE_OPTS.has(k)) weeklyImages[k] = v;
+      });
       cafeImages = { ...weeklyImages, ...dailyImages };
       renderLunchOpts();
     });
