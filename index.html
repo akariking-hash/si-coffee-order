@@ -899,6 +899,84 @@ const MENUS = {
     { name:"루이보스 카라멜 티",           price:3000 },
   ],
   }, // 소소 끝
+
+  '커피나인': {
+    beans: [
+      { value:'sig',   label:'코리아나 (고소한, 산미)',    short:'코리아나',  price:0   },
+      { value:'dark',  label:'명동 (진한, 다크초콜릿)',     short:'명동',      price:0   },
+      { value:'decaf', label:'디카페인 (+900원)',           short:'디카페인',  price:900 },
+    ],
+    extras: [
+      { label:'샷 추가',    price:600 },
+      { label:'크림추가',   price:1000 },
+      { label:'오트밀크',   price:500 },
+      { label:'연하게',     price:0 },
+      { label:'덜달게',     price:0 },
+      { label:'설탕시럽',   price:0 },
+    ],
+    "커피": [
+      { name:"에스프레소",               price:3500, tempOnly:"HOT" },
+      { name:"아메리카노",               price:3500, hasBean:true },
+      { name:"카페라떼",                 price:4500, hasBean:true },
+      { name:"바닐라라떼",               price:4900 },
+      { name:"블랙모카라떼",             price:4900 },
+      { name:"돌체라떼",                 price:4900 },
+      { name:"명동크림프레소",           price:4500, tempOnly:"HOT" },
+      { name:"루비아메리카노",           price:4500 },
+      { name:"루비초콜릿라떼",           price:4900 },
+      { name:"프리즈노",                 price:4500, tempOnly:"ICE", star:true },
+      { name:"티라미수프레소",           price:5500, tempOnly:"ICE", star:true },
+    ],
+    "시그니처": [
+      { name:"나인슈페너",               price:5500 },
+      { name:"나인라떼",                 price:6500, star:true },
+      { name:"코리아라떼",               price:6500, star:true },
+      { name:"뉴기니바나나카페라떼",     price:4900 },
+      { name:"슈레디드코코넛카페라떼",   price:4900 },
+      { name:"프레즈딸기카페라떼",       price:4900 },
+    ],
+    "티베리에이션": [
+      { name:"히비스 루비",                        price:5900 },
+      { name:"베리 히비스커스",                    price:5900 },
+      { name:"핑크넛 그린티",                      price:5900 },
+      { name:"말차라떼",                           price:5500 },
+      { name:"발로나 초코라떼",                    price:5500 },
+      { name:"조지아 피치 아이스티",               price:4500 },
+      { name:"나인 클래식 밀크티 (얼그레이)",      price:5500 },
+      { name:"나인 클래식 밀크티 (마살라차이)",    price:5500 },
+    ],
+    "스미스티": [
+      { name:"히비스커스티",        price:5500 },
+      { name:"부케티",              price:5500 },
+      { name:"블랙라벤더티",        price:5500 },
+      { name:"레드넥타 (루이보스)", price:5500 },
+      { name:"메도우 (캐모마일)",   price:5500 },
+      { name:"마오펭수이 (그린티)", price:5500 },
+      { name:"페퍼민트 리브스",     price:5500 },
+    ],
+    "에이드": [
+      { name:"체리스파클링 에이드",          price:5900 },
+      { name:"오파인 에이드",               price:5900 },
+      { name:"파이팅김대리 에이드",          price:5500, note:"레드불" },
+      { name:"피치 나인볼",                 price:5500, note:"알콜 0.95%" },
+      { name:"라임 나인볼",                 price:5500, note:"알콜 0.95%" },
+      { name:"자몽에이드",                  price:5500 },
+      { name:"블루레몬 에이드",             price:5500 },
+    ],
+    "더치커피": [
+      { name:"더치커피",              price:4500 },
+      { name:"더치라떼",              price:5500, tempOnly:"ICE" },
+      { name:"아이리쉬커피 논알콜",   price:6500, tempOnly:"HOT" },
+      { name:"더치캔 (케냐)",         price:4900, tempOnly:"ICE" },
+      { name:"더치캔 (에티오피아)",   price:4900, tempOnly:"ICE" },
+      { name:"더치캔 (과테말라)",     price:4900, tempOnly:"ICE" },
+      { name:"더치캔 (디카페인)",     price:4900, tempOnly:"ICE" },
+      { name:"더치원액 (케냐)",       price:23900, tempOnly:"ICE" },
+      { name:"더치원액 (에티오피아)", price:23900, tempOnly:"ICE" },
+      { name:"더치원액 (과테말라)",   price:23900, tempOnly:"ICE" },
+      { name:"더치원액 (디카페인)",   price:23900, tempOnly:"ICE" },
+    ],
+  }, // 커피나인 끝
 }; // MENUS 끝
 
 const EXTRAS = [
@@ -908,7 +986,13 @@ const EXTRAS = [
   { label:"덜 달게",  price:0 },
 ];
 
-const TEMP_FREE = new Set(["COLD BREW","ADE"]);
+// 카페별 원두 기본값
+const DEFAULT_BEANS = [
+  { value:'sig',  label:'소소 시그니처', short:'시그니처', price:0 },
+  { value:'dark', label:'프리미엄 다크', short:'다크',      price:0 },
+];
+
+const TEMP_FREE = new Set(["COLD BREW","ADE","티베리에이션","스미스티","에이드"]);
 
 const PEOPLE = [
   '유낙근','이병호','신승국','강제규',
@@ -957,9 +1041,11 @@ db.ref('.info/connected').on('value', snap => {
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-const CAFE_LIST = Object.keys(MENUS); // ['소소', ...]
+const CAFE_LIST = Object.keys(MENUS); // ['소소', '커피나인', ...]
 let currentCafe = CAFE_LIST[0];
-function getMenu() { return MENUS[currentCafe]; }
+function getMenu()       { return MENUS[currentCafe]; }
+function getCafeBeans()  { return getMenu().beans  || DEFAULT_BEANS; }
+function getCafeExtras() { return getMenu().extras || EXTRAS; }
 function getLsKey() { return `si-coffee-orders-${currentCafe}`; }
 
 let orderRef   = db.ref(`si-coffee/${currentCafe}/orders`);
@@ -1113,7 +1199,7 @@ function pickItem(i) {
   sel = getMenu()[cat][i];
   temp = sel.tempOnly ?? null;
   size = sel.hasSize ? 'M' : null;
-  bean = sel.hasBean ? 'sig' : null;
+  bean = sel.hasBean ? (getCafeBeans()[0]?.value ?? 'sig') : null;
   extras = [];
   renderMenu();
   renderOpts();
@@ -1149,23 +1235,24 @@ function renderOpts() {
       </div></div>`;
   }
 
-  // Bean
+  // Bean (카페별)
   if (sel.hasBean) {
     html += `<div class="opt-group">
       <div class="opt-label">원두 선택</div>
       <div class="opt-btns">
-        <button class="opt-btn ${bean==='sig'?'on':''}" onclick="setBean('sig')">소소 시그니처</button>
-        <button class="opt-btn ${bean==='dark'?'on':''}" onclick="setBean('dark')">프리미엄 다크</button>
+        ${getCafeBeans().map(b =>
+          `<button class="opt-btn ${bean===b.value?'on':''}" onclick="setBean('${b.value}')">${b.label}</button>`
+        ).join('')}
       </div></div>`;
   }
 
-  // Extras
+  // Extras (카페별)
   html += `<div class="opt-group">
     <div class="opt-label">추가 옵션</div>
     <div class="opt-btns">
-      ${EXTRAS.map((e,i) =>
+      ${getCafeExtras().map((e,i) =>
         `<button class="opt-btn extra ${extras.includes(i)?'on':''}" onclick="toggleExtra(${i})">
-          ${e.label} +${e.price.toLocaleString()}
+          ${e.label}${e.price > 0 ? ' +' + e.price.toLocaleString() : ''}
         </button>`
       ).join('')}
     </div></div>`;
@@ -1189,7 +1276,12 @@ function calcPrice() {
   let p = sel.price;
   if (size === 'S') p = 1500;
   if (size === 'L') p = 3500;
-  extras.forEach(i => { p += EXTRAS[i].price; });
+  if (bean) {
+    const beanDef = getCafeBeans().find(b => b.value === bean);
+    if (beanDef?.price) p += beanDef.price;
+  }
+  const cafeExtras = getCafeExtras();
+  extras.forEach(i => { p += cafeExtras[i].price; });
   return p;
 }
 
@@ -1197,9 +1289,12 @@ function buildOptsLabel() {
   const parts = [];
   if (temp) parts.push(temp);
   if (size && size !== 'M') parts.push(size + '사이즈');
-  if (bean === 'sig')  parts.push('시그니처');
-  if (bean === 'dark') parts.push('다크');
-  extras.forEach(i => parts.push(EXTRAS[i].label));
+  if (bean) {
+    const beanDef = getCafeBeans().find(b => b.value === bean);
+    if (beanDef) parts.push(beanDef.short);
+  }
+  const cafeExtras = getCafeExtras();
+  extras.forEach(i => parts.push(cafeExtras[i].label));
   return parts.join(' · ');
 }
 
