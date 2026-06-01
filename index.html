@@ -66,7 +66,7 @@
     }
     .cafe-tabs { display: flex; gap: 5px; }
     .cafe-tab {
-      padding: 4px 14px;
+      padding: 7px 16px;
       border-radius: 20px;
       border: 1.5px solid var(--tab-border, var(--border));
       background: transparent;
@@ -101,11 +101,10 @@
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
-      color: var(--muted);
+      color: #888;
       transition: all 0.15s;
     }
-    .page-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
-    .page-tab[data-page="lunch"].active { color: #F5620A; border-bottom-color: #F5620A; }
+    .page-tab.active { color: #1a1a1a; border-bottom-color: #1a1a1a; }
 
     /* 주간 탭 */
     .week-nav {
@@ -115,7 +114,9 @@
     .week-label { font-size: 13px; font-weight: 700; color: var(--text); }
     .week-nav-btn {
       background: none; border: 1.5px solid var(--accent-border); border-radius: 8px;
-      padding: 4px 10px; cursor: pointer; font-size: 12px; color: var(--accent-muted);
+      min-width: 36px; min-height: 36px; padding: 0 10px;
+      cursor: pointer; font-size: 12px; color: var(--accent-muted);
+      display: flex; align-items: center; justify-content: center;
       transition: all 0.15s;
     }
     .week-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
@@ -337,7 +338,7 @@
     }
     .tab {
       flex-shrink: 0;
-      padding: 5px 13px;
+      padding: 7px 17px;
       border-radius: 20px;
       border: 1.5px solid var(--accent-border);
       background: var(--card);
@@ -380,7 +381,7 @@
       font-weight: 600;
     }
     .item-note { font-size: 11px; color: var(--accent-muted); margin-top: 2px; }
-    .item-price { font-size: 14px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+    .item-price { font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; }
 
     /* Options */
     .opt-group { margin-bottom: 14px; }
@@ -427,7 +428,7 @@
     .order-item:last-child { border-bottom: none; }
     .order-who { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 2px; }
     .order-drink { font-size: 14px; font-weight: 500; }
-    .order-opts { font-size: 11px; color: var(--accent-muted); margin-top: 2px; }
+    .order-opts { font-size: 12px; color: var(--accent-muted); margin-top: 2px; }
     .order-right { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
     .order-price { font-size: 14px; font-weight: 700; }
     .btn-del {
@@ -457,9 +458,9 @@
     .name-tag button {
       background: none;
       border: none;
-      color: #c0a090;
+      color: var(--accent-muted);
       cursor: pointer;
-      font-size: 14px;
+      font-size: 18px;
       padding: 0;
       line-height: 1;
       margin-left: 1px;
@@ -869,7 +870,7 @@
 const MENUS = {
   '소소': {
   "COFFEE": [
-    { name:"아메리카노",     price:2500, note:"S: 1,500 / L: 3,500", hasSize:true, hasBean:true },
+    { name:"아메리카노",     price:2500, hasSize:true, hasBean:true },
     { name:"카페라떼",       price:3300, hasBean:true },
     { name:"수제 바닐라빈 라떼", price:4000, star:true },
     { name:"연유 라떼",      price:3800 },
@@ -1210,9 +1211,11 @@ function switchCafe(name) {
 function renderNameGrid() {
   document.getElementById('nameGrid').innerHTML = getPeopleOrdered().map(n => {
     const ordered = orders.some(o => o.names.includes(n));
+    const isMe = n === getMyName();
     const cls = [n === selectedName ? 'selected' : '', ordered ? 'ordered' : ''].join(' ');
-    const meLabel = n === getMyName() ? '<span class="ordered-label" style="opacity:.6">나</span>' : '';
-    return `<button class="name-btn ${cls}" onclick="pickName('${n}')">${n}${ordered ? '<span class="ordered-label">✓ 주문완료</span>' : meLabel}</button>`;
+    const meTag = isMe ? '<span class="ordered-label" style="opacity:.7">나</span>' : '';
+    const label = ordered ? `<span class="ordered-label">✓ 완료${isMe ? ' · 나' : ''}</span>` : meTag;
+    return `<button class="name-btn ${cls}" onclick="pickName('${n}')">${n}${label}</button>`;
   }).join('');
 }
 
@@ -1478,7 +1481,7 @@ function copyOrders() {
   // 메뉴판 등장 순서 맵 생성
   const menuOrder = {};
   let idx = 0;
-  Object.values(getMenu()).forEach(items =>
+  Object.values(getMenu()).filter(Array.isArray).forEach(items =>
     items.forEach(item => { menuOrder[item.name] = idx++; })
   );
 
@@ -1576,8 +1579,13 @@ let lunchSelectedName = null;
 let lunchChoices      = {};
 let lunchRef          = null;
 let cafeImages        = {};   // { 이리오너라: 'data:image/...', ... }
+let weeklyImages      = {};   // 굿모닝, 가톨릭회관 (주별)
+let dailyImages       = {};   // 이리오너라 (일별)
 let cafeImagesRef     = null;
-let cafeImagesWeek    = null; // 현재 이미지 리스너가 연결된 주 키
+let cafeImagesDailyRef = null;
+let cafeImagesWeek    = null;
+let cafeImagesDate    = null;
+const DAILY_IMAGE_OPTS = new Set(['이리오너라']);
 let currentImageOpt   = null; // 이미지 메뉴 열린 옵션명
 let lunchJoinMode     = false; // 함께해요 버튼으로 참여 시 opts 활성화 억제
 let lunchHereMode     = false; // 여기어때요 버튼 클릭 후 텍스트 입력 대기 상태
@@ -1700,17 +1708,41 @@ function initLunch() {
   attachCafeImagesListener();
 }
 
-// 현재 주의 이미지 Firebase 리스너 연결 (주 변경 시 자동 갱신)
+// 이미지 저장 경로 (옵션별 주기 다름)
+function getCafeImagePath(optName) {
+  return DAILY_IMAGE_OPTS.has(optName)
+    ? `si-cafe-images/daily/${getLunchDateKey()}/${optName}`
+    : `si-cafe-images/weekly/${formatDate(currentWeekMonday)}/${optName}`;
+}
+
+// 이미지 리스너 연결 (주별 + 일별)
 function attachCafeImagesListener() {
   const weekKey = formatDate(currentWeekMonday);
-  if (cafeImagesWeek === weekKey) return; // 이미 이번 주 리스너 연결됨
-  if (cafeImagesRef) cafeImagesRef.off();  // 이전 주 리스너 해제
-  cafeImagesWeek = weekKey;
-  cafeImagesRef = db.ref(`si-cafe-images/${weekKey}`);
-  cafeImagesRef.on('value', snap => {
-    cafeImages = snap.val() || {};
-    renderLunchOpts();
-  });
+  const dateKey = getLunchDateKey();
+
+  // 주별 리스너 (굿모닝, 가톨릭회관)
+  if (cafeImagesWeek !== weekKey) {
+    if (cafeImagesRef) cafeImagesRef.off();
+    cafeImagesWeek = weekKey;
+    cafeImagesRef = db.ref(`si-cafe-images/weekly/${weekKey}`);
+    cafeImagesRef.on('value', snap => {
+      weeklyImages = snap.val() || {};
+      cafeImages = { ...weeklyImages, ...dailyImages };
+      renderLunchOpts();
+    });
+  }
+
+  // 일별 리스너 (이리오너라)
+  if (cafeImagesDate !== dateKey) {
+    if (cafeImagesDailyRef) cafeImagesDailyRef.off();
+    cafeImagesDate = dateKey;
+    cafeImagesDailyRef = db.ref(`si-cafe-images/daily/${dateKey}`);
+    cafeImagesDailyRef.on('value', snap => {
+      dailyImages = snap.val() || {};
+      cafeImages = { ...weeklyImages, ...dailyImages };
+      renderLunchOpts();
+    });
+  }
 }
 
 function initLunchDay() {
@@ -1877,6 +1909,13 @@ function cancelLunchChoice(name) {
   setLunchChoice(name, null);
 }
 
+function joinLunchOpt(opt) {
+  if (!lunchSelectedName) { toast('이름을 먼저 선택해주세요'); return; }
+  lunchJoinMode = true;
+  selectLunch(opt);
+  lunchJoinMode = false;
+}
+
 function joinLunch(note) {
   if (!lunchSelectedName) { toast('이름을 먼저 선택해주세요'); return; }
   const value = (note && note.trim()) ? `오늘은 여기 어때요?|${note}` : '오늘은 여기 어때요?';
@@ -1942,7 +1981,7 @@ async function pasteFromClipboard() {
         const reader = new FileReader();
         reader.onload = async ev => {
           const compressed = await compressImage(ev.target.result, 800, 600, 0.75);
-          db.ref(`si-cafe-images/${formatDate(currentWeekMonday)}/${currentImageOpt}`).set(compressed);
+          db.ref(getCafeImagePath(currentImageOpt)).set(compressed);
           toast('이미지가 등록됐어요!');
         };
         reader.readAsDataURL(blob);
@@ -1966,7 +2005,7 @@ function handleFileSelect(e) {
   const reader = new FileReader();
   reader.onload = async ev => {
     const compressed = await compressImage(ev.target.result, 800, 600, 0.75);
-    db.ref(`si-cafe-images/${formatDate(currentWeekMonday)}/${currentImageOpt}`).set(compressed);
+    db.ref(getCafeImagePath(currentImageOpt)).set(compressed);
     toast('이미지가 등록됐어요!');
   };
   reader.readAsDataURL(file);
@@ -1975,7 +2014,7 @@ function handleFileSelect(e) {
 
 function removeCurrentImage() {
   closeImageMenu();
-  db.ref(`si-cafe-images/${formatDate(currentWeekMonday)}/${currentImageOpt}`).remove();
+  db.ref(getCafeImagePath(currentImageOpt)).remove();
   toast('이미지를 삭제했어요');
 }
 
@@ -2059,12 +2098,17 @@ function renderLunchResult() {
         const note = personNotes[n] ? `(${personNotes[n]})` : '';
         return `<span class="lunch-name-tag">${n}${note}<button onclick="cancelLunchChoice('${n}')">×</button></span>`;
       }).join('');
+      const JOIN_TEXT = { '이리오너라':'함께해요', '굿모닝':'함께해요', '가톨릭회관':'함께해요', '도시락':'저도요', '약속':'저도요', '연차':'저도 쉬어요' };
+      const joinText = JOIN_TEXT[opt];
+      const safeOpt = encodeURIComponent(opt);
       rowItems.push({
         ts: minTs(groups[opt]),
         html: `
           <div class="lunch-result-row">
             <div class="lunch-result-label">
-              ${opt} <span class="lunch-count">${groups[opt].length}명</span>
+              <span>${opt}</span>
+              <span class="lunch-count">${groups[opt].length}명</span>
+              ${joinText ? `<button class="lunch-join-btn" onclick="joinLunchOpt(decodeURIComponent('${safeOpt}'))">${joinText}</button>` : ''}
             </div>
             <div class="lunch-result-names">${nameTags}</div>
           </div>`
@@ -2138,7 +2182,7 @@ function copyHistory(key) {
 
   const menuOrder = {};
   let idx = 0;
-  Object.values(getMenu()).forEach(items =>
+  Object.values(getMenu()).filter(Array.isArray).forEach(items =>
     items.forEach(item => { menuOrder[item.name] = idx++; })
   );
   const sorted = [...entry.orders].sort((a, b) =>
