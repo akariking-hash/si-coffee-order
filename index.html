@@ -1628,14 +1628,12 @@ function prevWeek() {
   const m = new Date(currentWeekMonday);
   m.setDate(m.getDate() - 7);
   currentWeekMonday = m;
-  attachCafeImagesListener(); // 주 변경 → 이미지 리스너 갱신
   switchLunchDay(formatDate(getWeekTarget(getWeekDays(m))));
 }
 function nextWeek() {
   const m = new Date(currentWeekMonday);
   m.setDate(m.getDate() + 7);
   currentWeekMonday = m;
-  attachCafeImagesListener(); // 주 변경 → 이미지 리스너 갱신
   switchLunchDay(formatDate(getWeekTarget(getWeekDays(m))));
 }
 function switchLunchDay(dateStr) {
@@ -1653,6 +1651,7 @@ function switchLunchDay(dateStr) {
   initLunchDay();
   renderLunchNameGrid();
   renderLunchOpts();
+  attachCafeImagesListener(); // selectedLunchDate 확정 후 이미지 리스너 갱신
 }
 
 function renderWeekTabs() {
