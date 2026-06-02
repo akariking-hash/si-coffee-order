@@ -1086,7 +1086,7 @@ function getCafeExtras() { return getMenu()._config?.extras || EXTRAS; }
 function getLsKey() { return `si-coffee-orders-${currentCafe}`; }
 
 let orderRef   = db.ref(`si-coffee/${currentCafe}/orders`);
-let historyRef = db.ref(`si-coffee/${currentCafe}/history`);
+const historyRef = db.ref('si-coffee/history');
 
 // ─── 구버전 opts 텍스트 정규화 ───
 function normalizeOrders(arr) {
@@ -1135,7 +1135,7 @@ function resetOrders() {
     const now = new Date();
     const pad = n => String(n).padStart(2, '0');
     const dateStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
-    historyRef.push({ date: dateStr, orders: JSON.parse(JSON.stringify(orders)) });
+    historyRef.push({ date: dateStr, cafe: currentCafe, orders: JSON.parse(JSON.stringify(orders)) });
   }
   orders = [];
   clearLocal();
@@ -1195,7 +1195,6 @@ function switchCafe(name) {
   cats = Object.keys(getMenu()).filter(k => Array.isArray(getMenu()[k]));
   cat  = cats[0];
   orderRef   = db.ref(`si-coffee/${currentCafe}/orders`);
-  historyRef = db.ref(`si-coffee/${currentCafe}/history`);
   orders = [];
   sel = null; temp = null; size = null; bean = null; extras = [];
   document.getElementById('optCard').style.display = 'none';
@@ -1708,10 +1707,13 @@ function initLunch() {
   attachCafeImagesListener();
 }
 
+// 오늘 날짜 키 (selectedLunchDate와 무관하게 항상 오늘)
+function getTodayKey() { return formatDate(new Date()); }
+
 // 이미지 저장 경로 (옵션별 주기 다름)
 function getCafeImagePath(optName) {
   return DAILY_IMAGE_OPTS.has(optName)
-    ? `si-cafe-images/daily/${getLunchDateKey()}/${optName}`
+    ? `si-cafe-images/daily/${getTodayKey()}/${optName}`
     : `si-cafe-images/weekly/${formatDate(currentWeekMonday)}/${optName}`;
 }
 
@@ -1791,11 +1793,13 @@ function renderLunchNameGrid() {
     const note   = getChoiceNote(choice);
     const label  = base === '오늘은 여기 어때요?' ? (note || '여기어때요?') : base;
     const cls = ['name-btn', n === lunchSelectedName ? 'selected' : '', base ? 'ordered' : ''].join(' ');
-    const meLabel = (!base && n === getMyName()) ? '<span class="ordered-label" style="opacity:.6">나</span>' : '';
+    const isMe = n === getMyName();
+    const meLabel = (!base && isMe) ? '<span class="ordered-label" style="opacity:.6">나</span>' : '';
+    const doneLabel = base ? `<span class="ordered-label">✓ 완료${isMe ? ' · 나' : ''}</span>` : meLabel;
     const delBtn = isExtra ? `<span class="name-btn-del" onclick="event.stopPropagation();deleteLunchExtraName('${n}')">×</span>` : '';
     return `<button class="${cls}" onclick="pickLunchName('${n}')">
       ${n}
-      ${base ? `<span class="ordered-label">${label}</span>` : meLabel}${delBtn}
+      ${doneLabel}${delBtn}
     </button>`;
   }).join('');
 }
@@ -2148,22 +2152,42 @@ function toggleHistory() {
 }
 
 function loadHistory() {
-  historyRef.orderByKey().limitToLast(30).once('value', snap => {
-    const val = snap.val();
-    const list = document.getElementById('historyList');
-    if (!val) { list.innerHTML = '<div class="empty">조회된 내역이 없어요</div>'; return; }
-    historyData = val;
-    const entries = Object.entries(val).reverse(); // 최신순
-    list.innerHTML = entries.map(([key]) => {
-      const entry = historyData[key];
-      return `<div class="history-entry">
-        <div class="history-header" onclick="toggleHistoryEntry('${key}')">
-          <span class="history-date">${entry.date}</span>
-          <span class="history-arrow" id="ha-${key}">▼</span>
+  const list = document.getElementById('historyList');
+  list.innerHTML = '<div class="empty">불러오는 중…</div>';
+
+  // 공통 경로 + 구버전 카페별 경로 모두 수집
+  const fetchPromises = [
+    historyRef.orderByKey().limitToLast(50).once('value').then(snap => {
+      const val = snap.val() || {};
+      return Object.values(val); // cafe 필드 이미 포함
+    })
+  ].concat(CAFE_LIST.map(cafe =>
+    db.ref(`si-coffee/${cafe}/history`).orderByKey().limitToLast(50).once('value').then(snap => {
+      const val = snap.val() || {};
+      return Object.values(val).map(e => ({ ...e, cafe: e.cafe || cafe }));
+    })
+  ));
+
+  Promise.all(fetchPromises).then(results => {
+    const all = results.flat();
+    if (all.length === 0) { list.innerHTML = '<div class="empty">조회된 내역이 없어요</div>'; return; }
+
+    // 날짜 내림차순 정렬 후 최신 30개
+    all.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    const shown = all.slice(0, 30);
+
+    historyData = {};
+    shown.forEach((e, i) => { historyData[i] = e; });
+
+    list.innerHTML = shown.map((entry, i) =>
+      `<div class="history-entry">
+        <div class="history-header" onclick="toggleHistoryEntry(${i})">
+          <span class="history-date">${entry.date}${entry.cafe ? ` <span style="font-weight:400;opacity:.7">(${entry.cafe})</span>` : ''}</span>
+          <span class="history-arrow" id="ha-${i}">▼</span>
         </div>
-        <div class="history-body" id="hb-${key}" style="display:none"></div>
-      </div>`;
-    }).join('');
+        <div class="history-body" id="hb-${i}" style="display:none"></div>
+      </div>`
+    ).join('');
   });
 }
 
