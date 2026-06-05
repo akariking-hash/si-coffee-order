@@ -1725,6 +1725,7 @@ function attachCafeImagesListener() {
   if (cafeImagesWeek !== weekKey) {
     if (cafeImagesRef) cafeImagesRef.off();
     cafeImagesWeek = weekKey;
+    weeklyImages = {};  // 주 전환 시 초기화 — 이전 주 이미지 잔류 방지
 
     // 구버전 경로에서 기존 이미지 한 번 읽어 병합 (하위 호환)
     // 일별 리셋 옵션(이리오너라)은 제외 — daily 경로에서만 관리
