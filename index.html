@@ -11,15 +11,15 @@
   <style>
     :root {
       /* ── 글로벌 (공통) ── */
-      --primary: #8B1A1A;   /* 페이지 네비게이션 전용 */
-      --bg:      #FDEBEB;
+      --primary: #8B1A1A;   /* 소소 메인 브랜드 컬러 */
+      --bg:      #e7e7e7;
       --card:    #ffffff;
-      --border:  #e8d5c8;
-      --text:    #2c1a1a;
-      --muted:   #8a6a6a;
+      --border:  #cacaca;
+      --text:    #1a1a1a;
+      --muted:   #8b8b8b;
 
-      /* ── 테마 토큰 기본값 (소소) ── */
-      --accent:         #8B1A1A;
+      /* ── 테마 토큰 기본값 (소소 기준) ── */
+      --accent:         var(--primary);
       --accent-muted:   #B08080;
       --accent-border:  #E8D5C8;
       --accent-hover:   #FDEBEB;
@@ -101,7 +101,7 @@
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
-      color: #888;
+      color: #acacac;
       transition: all 0.15s;
     }
     .page-tab.active { color: #1a1a1a; border-bottom-color: #1a1a1a; }
@@ -304,7 +304,7 @@
       background: #fafafa; cursor: text; transition: border-color 0.15s;
     }
     .name-direct-wrap:hover { background: #fff5f0; }
-    .name-direct-wrap.focused { border-color: var(--primary); background: #fafafa !important; }
+    .name-direct-wrap.focused { border-color: var(--accent); background: #fafafa !important; }
     .name-direct-input {
       position: absolute; inset: 0; width: 100%; height: 100%;
       padding: 4px 6px; border: none; outline: none;
@@ -585,7 +585,7 @@
       border-color: var(--accent);
       border-width: 2.5px;
     }
-    .lunch-opt-img-btn.on .opt-name { color: var(--primary); font-weight: 700; }
+    .lunch-opt-img-btn.on .opt-name { color: var(--accent); font-weight: 700; }
     .opt-img-area {
       width: 100%;
       height: 76px;
@@ -869,6 +869,15 @@
 <script>
 const MENUS = {
   '소소': {
+    _config: {
+      accent:        'var(--primary)',
+      accentMuted:   '#B08080',
+      accentBorder:  '#E8D5C8',
+      accentHover:   '#FDEBEB',
+      accentDivider: '#E8C8C8',
+      accentExtra:   '#5C2E2E',
+      textColor:     '#B08080',
+    },
   "COFFEE": [
     { name:"아메리카노",     price:2500, hasSize:true, hasBean:true },
     { name:"카페라떼",       price:3300, hasBean:true },
@@ -1284,7 +1293,7 @@ function init() {
 function renderCafeTabs() {
   document.getElementById('cafeTabs').innerHTML = CAFE_LIST.map(c => {
     const cfg    = MENUS[c]._config || {};
-    const color  = cfg.accent       || 'var(--primary)';
+    const color  = cfg.accent       || 'var(--accent)';
     const border = cfg.accentBorder || 'var(--border)';
     const text   = cfg.textColor  || '#b08080';
     return `<button class="cafe-tab ${c === currentCafe ? 'active' : ''}" style="--tab-color:${color};--tab-border:${border};--tab-text:${text}" onclick="switchCafe('${c}')">${c}</button>`;
@@ -1294,7 +1303,7 @@ function renderCafeTabs() {
 function applyCafeColor() {
   const cfg = getMenu()._config || {};
   const el  = document.getElementById('page-coffee');
-  el.style.setProperty('--accent',         cfg.accent        || 'var(--primary)');
+  el.style.setProperty('--accent',         cfg.accent        || 'var(--accent)');
   el.style.setProperty('--accent-muted',   cfg.accentMuted   || '#B08080');
   el.style.setProperty('--accent-border',  cfg.accentBorder  || 'var(--border)');
   el.style.setProperty('--accent-hover',   cfg.accentHover   || '#FDEBEB');
