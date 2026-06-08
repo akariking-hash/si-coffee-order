@@ -127,74 +127,6 @@
       --accent-divider: #E8D3C8;
       --accent-extra:   #763E23;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding-bottom: 40px;
-    }
-    header {
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 20px;
-      text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
-    }
-    header h1 { font-size: 20px; font-weight: 700; color: #000; letter-spacing: -0.3px; }
-    .header-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .cafe-tabs { display: flex; gap: 5px; }
-    .cafe-tab {
-      padding: 7px 16px;
-      border-radius: 20px;
-      border: 1.5px solid var(--tab-border, var(--border));
-      background: transparent;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      color: var(--tab-text, #b08080);
-      transition: all 0.15s;
-    }
-    .cafe-tab.active { background: var(--accent); border-color: var(--accent); color: white; }
-    .cafe-tab:hover:not(.active) { border-color: var(--tab-color, var(--accent)); color: var(--tab-color, var(--accent)); }
-    .conn-info { font-size: 11px; color: #b08080; }
-
-    /* 페이지 탭 네비게이션 */
-    .page-nav {
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: center;
-      gap: 0;
-      position: sticky;
-      top: 73px;
-      z-index: 99;
-    }
-    .page-tab {
-      flex: 1;
-      max-width: 160px;
-      padding: 11px 0;
-      border: none;
-      border-bottom: 2.5px solid transparent;
-      background: transparent;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      color: #acacac;
-      transition: all 0.15s;
-    }
-    .page-tab.active { color: #1a1a1a; border-bottom-color: #1a1a1a; }
-
     /* 주간 탭 */
     .week-nav {
       display: flex; align-items: center; justify-content: space-between;
@@ -331,7 +263,44 @@
     #page-lunch .day-tab.holiday.active,
     #page-lunch .day-tab.today.holiday { background: #f0ebe8 !important; border-color: #e0d0c8 !important; }
     #page-lunch .day-tab.holiday .day-num { color: #333333 !important; }
-
+    /* 이미지 첨부 버튼 */
+    .lunch-opt-img-btn { padding: 0; overflow: hidden; display: flex; flex-direction: column; align-items: stretch; position: relative; cursor: pointer; }
+    .lunch-opt-img-btn.on { background: var(--card) !important; border-color: var(--accent); border-width: 2.5px; }
+    .lunch-opt-img-btn.on .opt-name { color: var(--accent); font-weight: 700; }
+    .opt-img-area { width: 100%; height: 76px; background: #f1f1f1; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+    .opt-img { width: 100%; height: 100%; object-fit: cover; }
+    .opt-img-icon { color: #a5a5a5; display: flex; align-items: center; justify-content: center; }
+    .opt-name { padding: 7px 6px; font-size: 13px; font-weight: 600; color: var(--text); text-align: center; }
+    .opt-img-action-btn { position: absolute; top: 5px; right: 5px; width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.88); border: 1px solid rgba(0,0,0,0.1); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2; padding: 0; color: #555; line-height: 1; }
+    .opt-img-action-btn:hover { background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+    .opt-view-btn { position: absolute; top: 26px; left: 50%; transform: translateX(-50%); padding: 5px 13px; background: rgba(0,0,0,0.52); color: white; border: 1.5px solid rgba(255,255,255,0.55); border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; white-space: nowrap; z-index: 1; }
+    .opt-view-btn:hover { background: rgba(0,0,0,0.75); border-color: rgba(255,255,255,0.85); }
+    /* 여기어때요 */
+    .lunch-opt-here { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+    .lunch-opt-here.on { background: var(--card) !important; border-color: var(--accent) !important; border-width: 2px; align-items: stretch; justify-content: center; cursor: default; }
+    .lunch-here-label { font-size: 13px; font-weight: 600; color: var(--accent); text-align: center; cursor: pointer; padding-bottom: 3px; }
+    .lunch-here-input-row { display: flex; flex-direction: column; gap: 5px; width: 100%; }
+    .lunch-here-input { width: 100%; padding: 8px 10px; border-radius: 7px; border: 1.5px solid var(--accent-border); background: var(--bg); font-size: 13px; font-family: inherit; outline: none; color: var(--text); }
+    .lunch-here-input:focus { border-color: var(--accent); }
+    .lunch-here-submit { width: 100%; padding: 5px 0; border-radius: 7px; background: var(--accent); color: white; border: none; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .lunch-here-submit:hover { opacity: 0.88; }
+    /* 직접입력 노트 */
+    .lunch-note-row { grid-column: 1 / -1; display: flex; gap: 6px; align-items: stretch; }
+    .lunch-note-submit { padding: 10px 16px; border-radius: 10px; background: #F5620A; color: white; border: none; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; white-space: nowrap; flex-shrink: 0; }
+    .lunch-note-submit:hover { opacity: 0.88; }
+    .lunch-note-input { grid-column: 1 / -1; width: 100%; margin: 0; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #d5d5d5; font-size: 14px; font-family: inherit; color: var(--text); background: #f1f1f1; outline: none; transition: border-color 0.15s; }
+    .lunch-note-input:focus { border-color: var(--accent); background: var(--accent-hover); }
+    /* 라이트박스 */
+    #imgLightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 500; align-items: center; justify-content: center; padding: 24px; }
+    #imgLightbox.open { display: flex; }
+    #lightboxImg { max-width: 100%; max-height: 90vh; border-radius: 10px; object-fit: contain; box-shadow: 0 8px 40px rgba(0,0,0,0.5); }
+    #lightboxClose { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    #lightboxClose:hover { background: rgba(255,255,255,0.35); }
+    /* 이미지 팝업 메뉴 */
+    #imgMenu { display: none; position: fixed; z-index: 300; background: white; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.18); overflow: hidden; min-width: 170px; }
+    .img-menu-item { display: block; width: 100%; padding: 12px 18px; border: none; background: none; font-size: 14px; cursor: pointer; text-align: left; font-family: inherit; color: var(--text); transition: background 0.12s; }
+    .img-menu-item:hover { background: var(--accent-hover); }
+    .img-menu-item + .img-menu-item { border-top: 1px solid #f0e8e0; }
 
     /* ═══════════════════════════════════════════════════
        3. 커피 주문 — 공통 (소소 · 커피나인 · DPC)
