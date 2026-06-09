@@ -297,7 +297,7 @@
     #lightboxClose { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     #lightboxClose:hover { background: rgba(255,255,255,0.35); }
     /* 이미지 팝업 메뉴 */
-    #imgMenu { display: none; position: fixed; z-index: 300; background: white; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.18); overflow: hidden; min-width: 170px; }
+    #imgMenu, #dinnerImgMenu { display: none; position: fixed; z-index: 300; background: white; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.18); overflow: hidden; min-width: 200px; }
     .img-menu-item { display: block; width: 100%; padding: 12px 18px; border: none; background: none; font-size: 14px; cursor: pointer; text-align: left; font-family: inherit; color: var(--text); transition: background 0.12s; }
     .img-menu-item:hover { background: var(--accent-hover); }
     .img-menu-item + .img-menu-item { border-top: 1px solid #f0e8e0; }
@@ -387,6 +387,139 @@
     /* ═══════════════════════════════════════════════════
        6. DPC  —  JS _config 기반, CSS 오버라이드 없음
     ═══════════════════════════════════════════════════ */
+
+    /* ═══════════════════════════════════════════════════
+       7. 회식메뉴
+    ═══════════════════════════════════════════════════ */
+    #page-dinner {
+      --bg: #F2F6FF;
+      background: var(--bg);
+    }
+    /* 후보 카드 */
+    .dinner-cand-header {
+      display: flex; align-items: center; gap: 8px;
+      justify-content: space-between; margin-bottom: 10px;
+    }
+    .dinner-restaurant {
+      font-size: 16px; font-weight: 700; color: var(--text);
+      flex: 1; word-break: break-all; line-height: 1.3;
+    }
+    /* 썸네일 이미지 */
+    .dinner-thumb-img-wrap {
+      position: relative; border-radius: 10px; overflow: hidden;
+      border: 1.5px solid var(--accent-border); margin-bottom: 12px;
+    }
+    .dinner-thumb-link { display: block; }
+    .dinner-thumb-img { width: 100%; height: 180px; object-fit: cover; display: block; }
+    .dinner-thumb-edit-btn {
+      position: absolute; top: 8px; right: 8px;
+      background: rgba(0,0,0,0.45); color: white; border: none;
+      border-radius: 20px; padding: 4px 10px; font-size: 11px; font-weight: 700;
+      cursor: pointer; white-space: nowrap;
+    }
+    .dinner-thumb-link-btn {
+      position: absolute; top: 38px; right: 8px;
+      background: rgba(0,0,0,0.45); color: white; border: none;
+      border-radius: 20px; padding: 4px 10px; font-size: 11px; font-weight: 700;
+      cursor: pointer; white-space: nowrap;
+    }
+    .dinner-thumb-placeholder {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      width: 100%; height: 56px; border-radius: 10px;
+      border: 1.5px dashed var(--accent-border); background: transparent;
+      color: var(--accent-muted); font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s, border-color 0.15s; margin-bottom: 12px;
+    }
+    .dinner-thumb-placeholder:hover { background: var(--accent-hover); border-color: var(--accent); color: var(--accent); }
+    .dinner-proposer-text {
+      font-size: 12px; color: var(--accent-muted); font-weight: 600;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .dinner-proposer-text span { color: var(--accent-extra); }
+    .dinner-delete-btn {
+      flex-shrink: 0; background: none; border: none;
+      color: #ccc; cursor: pointer; font-size: 20px;
+      padding: 0 0 0 8px; line-height: 1; transition: color 0.12s;
+    }
+    .dinner-delete-btn:hover { color: #e05050; }
+    /* 투표 섹션 */
+    .dinner-vote-section {
+      border-top: 1px solid var(--accent-divider); padding-top: 10px; margin-top: 2px;
+    }
+    .dinner-vote-title {
+      font-size: 11px; font-weight: 700; color: var(--accent-muted);
+      letter-spacing: 0.8px; text-transform: uppercase;
+      display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
+    }
+    .dinner-vote-count {
+      background: var(--accent); color: white;
+      border-radius: 10px; padding: 1px 7px; font-size: 10px; font-weight: 700;
+    }
+    .dinner-my-vote {
+      margin-left: auto; font-size: 11px; font-weight: 700;
+      color: var(--accent); background: var(--accent-hover);
+      border-radius: 20px; padding: 2px 9px;
+    }
+    .dinner-vote-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .dinner-vote-chip {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 5px 8px 5px 12px; background: var(--accent-hover);
+      border-radius: 20px; font-size: 13px; font-weight: 600; color: var(--accent);
+    }
+    .dinner-vote-chip button {
+      background: none; border: none; color: var(--accent-muted);
+      cursor: pointer; font-size: 16px; padding: 0 1px; line-height: 1;
+    }
+    .dinner-vote-chip button:hover { color: var(--accent); }
+    .dinner-vote-select {
+      width: 100%; padding: 9px 14px; border-radius: 10px;
+      border: 1.5px solid var(--accent-border); background: var(--accent-hover);
+      font-size: 13px; font-family: inherit; color: var(--accent-muted);
+      cursor: pointer; outline: none;
+    }
+    .dinner-vote-select:focus { border-color: var(--accent); color: var(--text); }
+    /* 헤더 카드 추가 버튼 */
+    .dinner-add-btn {
+      padding: 7px 14px; border-radius: 20px;
+      background: var(--accent); color: white; border: none;
+      font-size: 12px; font-weight: 700; cursor: pointer; transition: opacity 0.15s;
+      white-space: nowrap;
+    }
+    .dinner-add-btn:hover { opacity: 0.85; }
+    /* 공통 */
+    .dinner-empty { text-align: center; color: var(--accent-muted); font-size: 14px; padding: 18px 0; }
+    /* 등록 폼 */
+    .dinner-form-row { margin-bottom: 12px; }
+    .dinner-form-label {
+      font-size: 11px; font-weight: 700; color: var(--accent-muted);
+      letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px;
+    }
+    .dinner-form-input {
+      width: 100%; padding: 10px 14px; border-radius: 10px;
+      border: 1.5px solid var(--accent-border); font-size: 14px;
+      font-family: inherit; color: var(--text); background: #f9f9ff;
+      outline: none; transition: border-color 0.15s;
+    }
+    .dinner-form-input:focus { border-color: var(--accent); background: var(--accent-hover); }
+    /* 폼 썸네일 업로드 */
+    .dinner-form-thumb-area {
+      border: 1.5px dashed var(--accent-border); border-radius: 10px; padding: 10px;
+    }
+    .dinner-form-thumb-empty { display: flex; gap: 8px; }
+    .dinner-form-thumb-btn {
+      flex: 1; padding: 10px 6px; border: 1.5px solid var(--accent-border);
+      border-radius: 8px; background: var(--accent-hover); color: var(--accent-muted);
+      font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .dinner-form-thumb-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .dinner-form-thumb-preview { position: relative; }
+    .dinner-form-thumb-preview img { width: 100%; border-radius: 8px; max-height: 160px; object-fit: cover; display: block; }
+    .dinner-form-thumb-remove {
+      position: absolute; top: 6px; right: 6px;
+      background: rgba(0,0,0,0.45); color: white; border: none;
+      border-radius: 20px; padding: 3px 9px; font-size: 11px; font-weight: 700; cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -401,6 +534,7 @@
 <nav class="page-nav">
   <button class="page-tab active" data-page="lunch"  onclick="switchPage('lunch')">🍱 점심 선택</button>
   <button class="page-tab"        data-page="coffee" onclick="switchPage('coffee')">☕ 커피 주문</button>
+  <button class="page-tab"        data-page="dinner" onclick="switchPage('dinner')">🍻 회식메뉴</button>
 </nav>
 
 <!-- ☕ 커피 주문 페이지 -->
@@ -500,6 +634,55 @@
 </div>
 <!-- /🍱 점심 선택 페이지 -->
 
+<!-- 🍻 회식메뉴 페이지 -->
+<div id="page-dinner" class="container" style="display:none">
+
+  <!-- 후보 추가 버튼 -->
+  <button id="dinnerAddBtn" class="dinner-add-btn" onclick="toggleDinnerForm()" style="width:100%;padding:14px;margin-bottom:10px;border-radius:14px;font-size:15px">+ 후보 추가</button>
+
+  <!-- 후보 등록 폼 -->
+  <div class="card" id="dinnerFormCard" style="display:none">
+    <div class="card-title">후보 등록</div>
+
+    <div class="dinner-form-row">
+      <div class="dinner-form-label">제안자 <span style="color:var(--accent)">*</span></div>
+      <select id="dinnerProposerSelect" class="dinner-form-input" style="cursor:pointer"></select>
+    </div>
+
+    <div class="dinner-form-row">
+      <div class="dinner-form-label">메뉴 / 식당명 <span style="color:var(--accent)">*</span></div>
+      <input type="text" id="dinnerRestaurant" class="dinner-form-input" placeholder="예) 삼겹살 맛집, 한식뷔페">
+    </div>
+
+    <div class="dinner-form-row">
+      <div class="dinner-form-label">URL <span style="color:var(--accent-muted);font-weight:400">(선택 · 클릭 링크)</span></div>
+      <input type="url" id="dinnerUrl" class="dinner-form-input" placeholder="네이버지도 / 카카오맵 / 홈페이지 링크">
+    </div>
+
+    <div class="dinner-form-row">
+      <div class="dinner-form-label">썸네일 <span style="color:var(--accent-muted);font-weight:400">(선택)</span></div>
+      <div class="dinner-form-thumb-area">
+        <div class="dinner-form-thumb-empty" id="dinnerFormThumbEmpty">
+          <button type="button" class="dinner-form-thumb-btn" onclick="dinnerFormPaste()">📋 클립보드</button>
+          <button type="button" class="dinner-form-thumb-btn" onclick="dinnerFormFileClick()">📎 파일 첨부</button>
+        </div>
+        <div class="dinner-form-thumb-preview" id="dinnerFormThumbPreview" style="display:none">
+          <img id="dinnerFormThumbImg" src="" alt="">
+          <button type="button" class="dinner-form-thumb-remove" onclick="dinnerFormRemoveThumb()">× 제거</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-add" onclick="submitDinnerCandidate()">등록하기</button>
+    <button class="btn-reset" onclick="toggleDinnerForm()" style="margin-top:8px">취소</button>
+  </div>
+
+  <!-- 동적 후보 카드 영역 -->
+  <div id="dinnerCandidateList"></div>
+
+</div>
+<!-- /🍻 회식메뉴 페이지 -->
+
 <!-- 이미지 라이트박스 -->
 <div id="imgLightbox" onclick="closeLightbox()">
   <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
@@ -512,6 +695,15 @@
   <button class="img-menu-item" onclick="triggerFileInput()">📎 파일 첨부</button>
   <button class="img-menu-item" id="imgMenuDelete" onclick="removeCurrentImage()" style="color:#c0504d">🗑️ 이미지 삭제</button>
 </div>
+
+<!-- 회식메뉴 이미지 팝업 메뉴 -->
+<div id="dinnerImgMenu">
+  <button class="img-menu-item" onclick="dinnerPasteFromClipboard()">📋 클립보드에서 붙여넣기</button>
+  <button class="img-menu-item" onclick="dinnerTriggerFileInput()">📎 파일 첨부</button>
+  <button class="img-menu-item" id="dinnerImgMenuDelete" onclick="removeDinnerImage()" style="color:#c0504d">🗑️ 이미지 삭제</button>
+</div>
+<input type="file" id="dinnerImgFileInput" accept="image/*" onchange="handleDinnerFileSelect(event)" style="display:none">
+<input type="file" id="dinnerFormFileInput" accept="image/*" onchange="handleDinnerFormFileSelect(event)" style="display:none">
 <input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
 
 <div class="toast" id="toast"></div>
@@ -811,6 +1003,11 @@ const LUNCH_THEME = {
   accent: '#F5620A', accentMuted: '#CF8A76', accentBorder: '#E8D3C8',
   accentHover: '#FFF0E8', accentDivider: '#E8D3C8', accentExtra: '#763E23',
 };
+const DINNER_THEME = {
+  accent: '#000E66', accentMuted: '#8083B0', accentBorder: '#C8D3E8',
+  accentHover: '#ECF0F9', accentDivider: '#C8D3E8', accentExtra: '#4451A5',
+  textColor: '#8083B0', bg: '#F2F6FF',
+};
 
 function applyThemeToRoot(cfg) {
   const el = document.documentElement;
@@ -820,7 +1017,7 @@ function applyThemeToRoot(cfg) {
   el.style.setProperty('--accent-hover',   cfg.accentHover   || '#FDEBEB');
   el.style.setProperty('--accent-divider', cfg.accentDivider || '#E8C8C8');
   el.style.setProperty('--accent-extra',   cfg.accentExtra   || '#5C2E2E');
-  el.style.setProperty('--bg',             cfg.accentHover   || '#FDEBEB');
+  el.style.setProperty('--bg',             cfg.bg || cfg.accentHover || '#FDEBEB');
 }
 
 // ── 내 이름 기억 (기기별 localStorage) ─────
@@ -1318,13 +1515,16 @@ function toast(msg) {
 function switchPage(page) {
   document.getElementById('page-coffee').style.display = page === 'coffee' ? 'block' : 'none';
   document.getElementById('page-lunch').style.display  = page === 'lunch'  ? 'block' : 'none';
+  document.getElementById('page-dinner').style.display = page === 'dinner' ? 'block' : 'none';
   document.querySelectorAll('.page-tab').forEach(t =>
     t.classList.toggle('active', t.dataset.page === page)
   );
   // 테마 변수 동기화 (toast 등 fixed 요소 포함)
-  if (page === 'lunch') applyThemeToRoot(LUNCH_THEME);
-  else applyCafeColor();
-  if (page === 'lunch') initLunch();
+  if (page === 'lunch')       applyThemeToRoot(LUNCH_THEME);
+  else if (page === 'dinner') applyThemeToRoot(DINNER_THEME);
+  else { document.documentElement.style.setProperty('--bg', '#e7e7e7'); applyCafeColor(); }
+  if (page === 'lunch')  initLunch();
+  if (page === 'dinner') initDinner();
 }
 
 // ── 점심 선택 ──────────────────────────────
@@ -2036,6 +2236,301 @@ document.addEventListener('click', function(e) {
   lunchHereMode = false;
   renderLunchOpts();
 });
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🍻 회식메뉴
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let dinnerCandidates = [];
+let dinnerRef        = null;
+let dinnerInited     = false;
+
+function initDinner() {
+  if (dinnerInited) return;
+  dinnerInited = true;
+  dinnerRef = db.ref('si-dinner/candidates');
+  dinnerRef.on('value', snap => {
+    dinnerCandidates = [];
+    snap.forEach(child => {
+      dinnerCandidates.push({ id: child.key, ...child.val() });
+    });
+    renderDinnerCandidates();
+  });
+}
+
+function esc(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderDinnerCandidates() {
+  const el = document.getElementById('dinnerCandidateList');
+  if (!el) return;
+  if (!dinnerCandidates.length) {
+    el.innerHTML = '<div class="card"><div class="dinner-empty">아직 등록된 후보가 없어요</div></div>';
+    return;
+  }
+  const myName = getMyName();
+
+  el.innerHTML = dinnerCandidates.map(c => {
+    const votes       = c.votes || {};
+    const voteCount   = Object.keys(votes).length;
+    const countBadge  = voteCount ? `<span class="dinner-vote-count">${voteCount}명</span>` : '';
+    const iVotedHere  = myName && !!votes[myName];
+    const myVoteBadge = iVotedHere ? `<span class="dinner-my-vote">✓ 여기에 투표완료</span>` : '';
+    // 썸네일 영역 — 이미지 있으면 표시, 없으면 추가 버튼
+    const thumbHtml = c.thumb
+      ? `<div class="dinner-thumb-img-wrap">
+          ${c.url ? `<a class="dinner-thumb-link" href="${esc(c.url)}" target="_blank" rel="noopener">` : ''}
+          <img class="dinner-thumb-img" src="${esc(c.thumb)}" alt="">
+          ${c.url ? '</a>' : ''}
+          <button class="dinner-thumb-edit-btn" onclick="openDinnerImgMenu('${c.id}',event)">✎ 이미지 수정</button>
+          <button class="dinner-thumb-link-btn" onclick="editDinnerLink('${c.id}',event)">🔗 링크 수정</button>
+        </div>`
+      : `<button class="dinner-thumb-placeholder" onclick="openDinnerImgMenu('${c.id}',event)">📷 썸네일 추가</button>`;
+    // 드롭박스 — 13명 전체 표시, 내 이름에 (나)/(나, 투표완료) 라벨
+    const voteSelect = `
+      <select class="dinner-vote-select" onchange="voteFromSelect('${c.id}',this)">
+        <option value="">${iVotedHere ? '투표 취소 / 변경...' : '여기에 투표하기...'}</option>
+        ${getPeopleOrdered().map(n => {
+          const isMe   = myName && n === myName;
+          const suffix = isMe && !!votes[n] ? ' (나, 투표완료)' : isMe ? ' (나)' : '';
+          return `<option value="${esc(n)}">${esc(n)}${suffix}</option>`;
+        }).join('')}
+      </select>`;
+    return `
+    <div class="card">
+      <div class="dinner-cand-header">
+        <span class="dinner-restaurant">${esc(c.restaurant)}</span>
+        <span class="dinner-proposer-text">제안자 : <span>${esc(c.proposer || '?')}</span></span>
+        <button class="dinner-delete-btn" onclick="deleteDinnerCandidate('${c.id}')" title="삭제">×</button>
+      </div>
+      ${thumbHtml}
+      <div class="dinner-vote-section">
+        <div class="dinner-vote-title">VOTE ${countBadge}${myVoteBadge}</div>
+        ${voteSelect}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleDinnerForm() {
+  const card = document.getElementById('dinnerFormCard');
+  const btn  = document.getElementById('dinnerAddBtn');
+  const isOpen = card.style.display !== 'none';
+  card.style.display = isOpen ? 'none' : 'block';
+  if (btn) btn.style.display = isOpen ? '' : 'none';
+  if (!isOpen) {
+    const sel = document.getElementById('dinnerProposerSelect');
+    sel.innerHTML = `<option value="">이름 선택...</option>` +
+      getPeopleOrdered().map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
+    document.getElementById('dinnerRestaurant').value = '';
+    document.getElementById('dinnerUrl').value = '';
+    dinnerFormRemoveThumb();
+  }
+}
+
+function submitDinnerCandidate() {
+  const proposer   = document.getElementById('dinnerProposerSelect').value;
+  const restaurant = document.getElementById('dinnerRestaurant').value.trim();
+  if (!proposer)    { toast('제안자를 선택해주세요'); return; }
+  if (!restaurant)  { toast('식당명을 입력해주세요'); return; }
+  const url   = document.getElementById('dinnerUrl').value.trim();
+  const entry = { proposer, restaurant, ts: Date.now() };
+  if (url)            entry.url   = url;
+  if (dinnerFormThumb) entry.thumb = dinnerFormThumb;
+  dinnerRef.push(entry);
+  toggleDinnerForm();
+  toast('등록됐어요!');
+}
+
+function deleteDinnerCandidate(id) {
+  if (!confirm('이 후보를 삭제할까요?')) return;
+  dinnerRef.child(id).remove();
+}
+
+
+// ── 회식메뉴 등록 폼 썸네일 ────────────────────
+let dinnerFormThumb = null;
+
+async function dinnerFormPaste() {
+  try {
+    const items = await navigator.clipboard.read();
+    for (const item of items) {
+      const imgType = item.types.find(t => t.startsWith('image/'));
+      if (imgType) {
+        const blob = await item.getType(imgType);
+        const reader = new FileReader();
+        reader.onload = async ev => {
+          const compressed = await compressImage(ev.target.result, 800, 600, 0.75);
+          setDinnerFormThumb(compressed);
+        };
+        reader.readAsDataURL(blob);
+        return;
+      }
+    }
+    toast('클립보드에 이미지가 없어요');
+  } catch(err) {
+    toast('클립보드 접근 권한을 허용해주세요');
+  }
+}
+
+function dinnerFormFileClick() {
+  document.getElementById('dinnerFormFileInput').click();
+}
+
+function handleDinnerFormFileSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async ev => {
+    const compressed = await compressImage(ev.target.result, 800, 600, 0.75);
+    setDinnerFormThumb(compressed);
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function setDinnerFormThumb(dataUrl) {
+  dinnerFormThumb = dataUrl;
+  document.getElementById('dinnerFormThumbImg').src = dataUrl;
+  document.getElementById('dinnerFormThumbEmpty').style.display = 'none';
+  document.getElementById('dinnerFormThumbPreview').style.display = 'block';
+}
+
+function dinnerFormRemoveThumb() {
+  dinnerFormThumb = null;
+  document.getElementById('dinnerFormThumbImg').src = '';
+  document.getElementById('dinnerFormThumbEmpty').style.display = 'flex';
+  document.getElementById('dinnerFormThumbPreview').style.display = 'none';
+}
+
+// ── 회식메뉴 썸네일 이미지 관리 (카드) ──────────
+let currentDinnerId = null;
+
+function openDinnerImgMenu(id, e) {
+  e.stopPropagation();
+  currentDinnerId = id;
+  const menu    = document.getElementById('dinnerImgMenu');
+  const delBtn  = document.getElementById('dinnerImgMenuDelete');
+  const cand    = dinnerCandidates.find(c => c.id === id);
+  delBtn.style.display = (cand && cand.thumb) ? 'block' : 'none';
+  const rect   = e.currentTarget.getBoundingClientRect();
+  const menuW  = 220;
+  let left = rect.left;
+  if (left + menuW > window.innerWidth - 8) left = window.innerWidth - menuW - 8;
+  menu.style.left = left + 'px';
+  menu.style.top  = (rect.bottom + 6) + 'px';
+  menu.style.display = 'block';
+  setTimeout(() => document.addEventListener('click', closeDinnerImgMenu, { once: true }), 0);
+}
+
+function closeDinnerImgMenu() {
+  document.getElementById('dinnerImgMenu').style.display = 'none';
+}
+
+async function dinnerPasteFromClipboard() {
+  closeDinnerImgMenu();
+  try {
+    const items = await navigator.clipboard.read();
+    for (const item of items) {
+      const imgType = item.types.find(t => t.startsWith('image/'));
+      if (imgType) {
+        const blob = await item.getType(imgType);
+        const reader = new FileReader();
+        reader.onload = async ev => {
+          const compressed = await compressImage(ev.target.result, 800, 600, 0.75);
+          dinnerRef.child(currentDinnerId).child('thumb').set(compressed);
+          toast('썸네일이 등록됐어요!');
+        };
+        reader.readAsDataURL(blob);
+        return;
+      }
+    }
+    toast('클립보드에 이미지가 없어요');
+  } catch(err) {
+    toast('클립보드 접근 권한을 허용해주세요');
+  }
+}
+
+function dinnerTriggerFileInput() {
+  closeDinnerImgMenu();
+  document.getElementById('dinnerImgFileInput').click();
+}
+
+function handleDinnerFileSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async ev => {
+    const compressed = await compressImage(ev.target.result, 800, 600, 0.75);
+    dinnerRef.child(currentDinnerId).child('thumb').set(compressed);
+    toast('썸네일이 등록됐어요!');
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function removeDinnerImage() {
+  closeDinnerImgMenu();
+  dinnerRef.child(currentDinnerId).child('thumb').remove();
+  toast('이미지를 삭제했어요');
+}
+
+function editDinnerLink(id, e) {
+  e.stopPropagation();
+  const cand = dinnerCandidates.find(c => c.id === id);
+  const current = (cand && cand.url) || '';
+  const newUrl = prompt('링크를 입력해주세요', current);
+  if (newUrl === null) return;
+  if (newUrl.trim()) {
+    dinnerRef.child(id).child('url').set(newUrl.trim());
+  } else {
+    dinnerRef.child(id).child('url').remove();
+  }
+}
+
+function voteFromSelect(candidateId, sel) {
+  const name = sel.value;
+  if (!name) return;
+  sel.value = '';
+
+  const myName = getMyName();
+  const cand   = dinnerCandidates.find(c => c.id === candidateId);
+  const alreadyHere = cand && cand.votes && cand.votes[name];
+
+  // 내 이름으로 이미 이 후보 투표 → 취소
+  if (alreadyHere && name === myName) {
+    dinnerRef.child(candidateId).child('votes').child(name).remove();
+    return;
+  }
+
+  // 다른 사람 이름 선택 (내 이름이 저장된 상태) → 표 주인 변경 확인
+  if (myName && name !== myName) {
+    if (!confirm(`${name}님 이신가요?\n표 주인을 ${name}님으로 바꿀게요`)) return;
+    // 기존 표는 그대로 유지, 새 이름으로 이 후보에 투표 추가 → 새로고침
+    dinnerRef.child(candidateId).child('votes').child(name).set(true)
+      .then(() => { saveMyName(name); renderDinnerCandidates(); });
+    return;
+  }
+
+  // 내 이름(또는 최초 투표) — 다른 후보에 이미 투표했으면 이동 확인
+  const prevCand = dinnerCandidates.find(c => c.id !== candidateId && c.votes && c.votes[name]);
+  if (prevCand) {
+    if (!confirm(`'${prevCand.restaurant}'에서 '${cand ? cand.restaurant : ''}'\n으로 표를 바꿀까요?`)) return;
+    dinnerRef.child(prevCand.id).child('votes').child(name).remove();
+  }
+  dinnerRef.child(candidateId).child('votes').child(name).set(true);
+  saveMyName(name);
+}
+
+function toggleDinnerVote(candidateId, name) {
+  const c = dinnerCandidates.find(c => c.id === candidateId);
+  const voted = c && c.votes && c.votes[name];
+  const voteRef = dinnerRef.child(candidateId).child('votes').child(name);
+  if (voted) voteRef.remove();
+  else       voteRef.set(true);
+}
 
 init();
 
