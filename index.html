@@ -1024,6 +1024,8 @@ function applyThemeToRoot(cfg) {
   el.style.setProperty('--accent-divider', cfg.accentDivider || '#E8C8C8');
   el.style.setProperty('--accent-extra',   cfg.accentExtra   || '#5C2E2E');
   el.style.setProperty('--bg',             cfg.bg || cfg.accentHover || '#FDEBEB');
+  el.style.setProperty('--text',           cfg.textColor     || '#1a1a1a');
+  el.style.setProperty('--muted',          cfg.mutedColor    || '#8b8b8b');
 }
 
 // ── 내 이름 기억 (기기별 localStorage) ─────
@@ -1528,7 +1530,13 @@ function switchPage(page) {
   // 테마 변수 동기화 (toast 등 fixed 요소 포함)
   if (page === 'lunch')       applyThemeToRoot(LUNCH_THEME);
   else if (page === 'dinner') applyThemeToRoot(DINNER_THEME);
-  else { document.documentElement.style.setProperty('--bg', '#e7e7e7'); applyCafeColor(); }
+  else {
+    const r = document.documentElement;
+    r.style.setProperty('--bg',    '#e7e7e7');
+    r.style.setProperty('--text',  '#1a1a1a');
+    r.style.setProperty('--muted', '#8b8b8b');
+    applyCafeColor();
+  }
   if (page === 'lunch')  initLunch();
   if (page === 'dinner') initDinner();
 }
