@@ -392,7 +392,7 @@
        7. 회식메뉴
     ═══════════════════════════════════════════════════ */
     #page-dinner {
-      --bg: #F2F6FF;
+      --bg: #FBF2FF;
       background: var(--bg);
     }
     /* 후보 카드 */
@@ -503,7 +503,7 @@
     .dinner-form-input {
       width: 100%; padding: 10px 14px; border-radius: 10px;
       border: 1.5px solid var(--accent-border); font-size: 14px;
-      font-family: inherit; color: var(--text); background: #f9f9ff;
+      font-family: inherit; color: var(--text); background: var(--accent-hover);
       outline: none; transition: border-color 0.15s;
     }
     .dinner-form-input:focus { border-color: var(--accent); background: var(--accent-hover); }
@@ -1010,9 +1010,9 @@ const LUNCH_THEME = {
   accentHover: '#FFF0E8', accentDivider: '#E8D3C8', accentExtra: '#763E23',
 };
 const DINNER_THEME = {
-  accent: '#000E66', accentMuted: '#8083B0', accentBorder: '#C8D3E8',
-  accentHover: '#ECF0F9', accentDivider: '#C8D3E8', accentExtra: '#4451A5',
-  textColor: '#8083B0', bg: '#F2F6FF',
+  accent: '#5500BD', accentMuted: '#9D80B0', accentBorder: '#DCC8E8',
+  accentHover: '#F4ECF9', accentDivider: '#DCC8E8', accentExtra: '#7E44A5',
+  textColor: '#9D80B0', bg: '#FBF2FF',
 };
 
 function applyThemeToRoot(cfg) {
