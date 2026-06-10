@@ -683,6 +683,12 @@
     <button class="btn-reset" onclick="toggleDinnerForm()" style="margin-top:8px">취소</button>
   </div>
 
+  <!-- 구분선 + 투표 현황 -->
+  <div id="dinnerVoteStatus" style="display:none">
+    <hr style="border:none;border-top:1px solid var(--accent-divider);margin:6px 0 14px">
+    <div id="dinnerVoteStatusText" style="font-size:13px;color:var(--accent-muted);text-align:center;margin-bottom:14px"></div>
+  </div>
+
   <!-- 동적 후보 카드 영역 -->
   <div id="dinnerCandidateList"></div>
 
@@ -2280,6 +2286,21 @@ function esc(str) {
 function renderDinnerCandidates() {
   const el = document.getElementById('dinnerCandidateList');
   if (!el) return;
+
+  // 투표 현황 업데이트
+  const statusWrap = document.getElementById('dinnerVoteStatus');
+  const statusText = document.getElementById('dinnerVoteStatusText');
+  if (dinnerCandidates.length && statusWrap && statusText) {
+    const totalMembers = getPeopleOrdered().length;
+    const votedSet = new Set();
+    dinnerCandidates.forEach(c => Object.keys(c.votes || {}).forEach(n => votedSet.add(n)));
+    const votedCount = votedSet.size;
+    statusWrap.style.display = '';
+    statusText.innerHTML = `<b style="color:var(--accent)">${totalMembers}명</b> 중 <b style="color:var(--accent)">${votedCount}명</b>이 투표 완료 했어요`;
+  } else if (statusWrap) {
+    statusWrap.style.display = 'none';
+  }
+
   if (!dinnerCandidates.length) {
     el.innerHTML = '<div class="card"><div class="dinner-empty">아직 등록된 후보가 없어요</div></div>';
     return;
