@@ -404,6 +404,12 @@
       font-size: 16px; font-weight: 700; color: var(--text);
       flex: 1; word-break: break-all; line-height: 1.3;
     }
+    .dinner-bullet {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      color: white; background: var(--accent); border-radius: 6px;
+      padding: 1px 6px; margin-right: 6px; vertical-align: middle;
+      line-height: 1.6; flex-shrink: 0;
+    }
     /* 썸네일 이미지 */
     .dinner-thumb-img-wrap {
       position: relative; border-radius: 10px; overflow: hidden;
@@ -2272,7 +2278,7 @@ function renderDinnerCandidates() {
   }
   const myName = getMyName();
 
-  el.innerHTML = dinnerCandidates.map(c => {
+  el.innerHTML = dinnerCandidates.map((c, idx) => {
     const votes       = c.votes || {};
     const voteCount   = Object.keys(votes).length;
     const countBadge  = voteCount ? `<span class="dinner-vote-count">${voteCount}명</span>` : '';
@@ -2301,7 +2307,7 @@ function renderDinnerCandidates() {
     return `
     <div class="card">
       <div class="dinner-cand-header">
-        <span class="dinner-restaurant">${esc(c.restaurant)}</span>
+        <span class="dinner-restaurant"><span class="dinner-bullet">후보${idx + 1}</span>${esc(c.restaurant)}</span>
         <span class="dinner-proposer-text">제안자 : <span>${esc(c.proposer || '?')}</span></span>
         <button class="dinner-delete-btn" onclick="deleteDinnerCandidate('${c.id}')" title="삭제">×</button>
       </div>
