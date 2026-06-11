@@ -1009,6 +1009,8 @@ const PEOPLE = [
 ];
 
 const LUNCH_OPTIONS = ['이리오너라','굿모닝','가톨릭회관','도시락','약속','연차','오늘은 여기 어때요?'];
+// 이름별 기본 선택 (당일 선택 이력 없을 때만 자동 적용)
+const LUNCH_DEFAULTS = { '김샛별': '도시락' };
 
 // 점심 테마 토큰 (fixed 요소용 documentElement 주입)
 const LUNCH_THEME = {
@@ -1816,6 +1818,10 @@ function pickLunchName(n) {
   const ph  = document.getElementById('lunchNameDirectPh');
   if (inp) inp.value = '';
   if (ph)  ph.innerHTML = '직접<br>입력';
+  // 기본 선택 자동 적용 (오늘 선택 이력 없을 때만)
+  if (LUNCH_DEFAULTS[n] && !lunchChoices[n]) {
+    setLunchChoice(n, LUNCH_DEFAULTS[n]);
+  }
   renderLunchNameGrid();
   renderLunchOpts();
 }
