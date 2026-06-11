@@ -129,8 +129,7 @@
     }
     /* 주간 탭 */
     .week-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 8px;
+      text-align: center; margin-bottom: 8px;
     }
     .week-header-title {
       font-size: 11px; font-weight: 800; letter-spacing: 1px;
@@ -618,7 +617,7 @@
   <!-- 주간 탭 -->
   <div class="card" style="padding-bottom:12px">
     <div class="week-header">
-      <span class="week-header-title">THIS WEEK</span>
+      <span class="week-header-title" id="weekThisLabel">THIS WEEK</span>
       <button class="week-back-btn" id="weekBackBtn" onclick="goThisWeek()" style="display:none">이번주로 돌아가기</button>
     </div>
     <div class="week-nav">
@@ -1694,8 +1693,10 @@ function renderWeekTabs() {
     `${m.getMonth()+1}월 ${m.getDate()}일 ~ ${end.getMonth()+1}월 ${end.getDate()}일`;
   const thisMonday = getThisMonday();
   const isThisWeek = formatDate(m) === formatDate(thisMonday);
-  const backBtn = document.getElementById('weekBackBtn');
-  if (backBtn) backBtn.style.display = isThisWeek ? 'none' : '';
+  const backBtn   = document.getElementById('weekBackBtn');
+  const thisLabel = document.getElementById('weekThisLabel');
+  if (backBtn)   backBtn.style.display   = isThisWeek ? 'none' : '';
+  if (thisLabel) thisLabel.style.display = isThisWeek ? '' : 'none';
 
   const DOWS = ['월','화','수','목','금'];
   document.getElementById('dayTabs').innerHTML = days.map((d, i) => {
