@@ -1804,13 +1804,18 @@ function initLunchDay() {
     Object.entries(val).forEach(([k, v]) => {
       if (k !== '_ts') lunchChoices[k] = v;
     });
-    // 기본 선택 자동 입력 (세션당 1회, 선택 이력 없을 때만)
-    Object.entries(LUNCH_DEFAULTS).forEach(([name, def]) => {
-      if (!_lunchDefaultsApplied.has(name) && !lunchChoices[name]) {
-        _lunchDefaultsApplied.add(name);
-        setLunchChoice(name, def);
-      }
-    });
+    // 기본 선택 자동 입력 (날짜별 1회, 오늘 이후 날짜만, 선택 이력 없을 때만)
+    const _dateKey = getLunchDateKey();
+    const _todayStr = formatDate(new Date());
+    if (_dateKey >= _todayStr) {
+      Object.entries(LUNCH_DEFAULTS).forEach(([name, def]) => {
+        const _flagKey = `${name}|${_dateKey}`;
+        if (!_lunchDefaultsApplied.has(_flagKey) && !lunchChoices[name]) {
+          _lunchDefaultsApplied.add(_flagKey);
+          setLunchChoice(name, def);
+        }
+      });
+    }
     renderLunchNameGrid();
     renderLunchResult();
     const noteEl = document.getElementById('lunchNote');
