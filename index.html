@@ -506,6 +506,50 @@
       white-space: nowrap;
     }
     .dinner-add-btn:hover { opacity: 0.85; }
+    /* 리셋 모달 */
+    .dinner-modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.35);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200; padding: 24px;
+    }
+    .dinner-modal {
+      background: var(--card); border-radius: 18px; padding: 24px 22px 20px;
+      width: 100%; max-width: 340px; box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    }
+    .dinner-modal-title {
+      font-size: 16px; font-weight: 800; color: var(--accent);
+      text-align: center; margin-bottom: 6px;
+    }
+    .dinner-modal-sub {
+      font-size: 13px; color: var(--accent-muted); text-align: center; margin-bottom: 20px;
+    }
+    .dinner-modal-btns { display: flex; gap: 8px; }
+    .dinner-modal-btns button { flex: 1; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: opacity 0.15s; }
+    .dinner-modal-no  { background: var(--accent-hover); color: var(--accent-muted); border: 1.5px solid var(--accent-border) !important; }
+    .dinner-modal-yes { background: var(--accent); color: white; }
+    .dinner-modal-btns button:hover { opacity: 0.85; }
+    .dinner-modal-date { width: 100%; padding: 11px 14px; border-radius: 10px; border: 1.5px solid var(--accent-border); font-size: 15px; font-family: inherit; outline: none; margin-bottom: 16px; color: var(--accent); background: var(--accent-hover); }
+    .dinner-modal-date:focus { border-color: var(--accent); }
+    /* 히스토리 */
+    .dinner-history-wrap { margin-top: 24px; }
+    .dinner-history-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; padding: 10px 0; border-top: 1px solid var(--accent-divider);
+    }
+    .dinner-history-toggle-label { font-size: 12px; font-weight: 700; color: var(--accent-muted); letter-spacing: 0.5px; }
+    .dinner-history-toggle-arrow { font-size: 11px; color: var(--accent-muted); transition: transform 0.2s; }
+    .dinner-history-list { display: none; }
+    .dinner-history-list.open { display: block; }
+    .dinner-history-item { margin-bottom: 14px; }
+    .dinner-history-date { font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+    .dinner-history-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 7px 10px; border-radius: 8px; background: var(--accent-hover);
+      margin-bottom: 4px; font-size: 13px;
+    }
+    .dinner-history-rank { font-weight: 800; color: var(--accent); min-width: 22px; }
+    .dinner-history-name { flex: 1; color: var(--accent); font-weight: 600; }
+    .dinner-history-votes { font-size: 12px; color: var(--accent-muted); }
     /* 공통 */
     .dinner-empty { text-align: center; color: var(--accent-muted); font-size: 14px; padding: 18px 0; }
     /* 등록 폼 */
@@ -710,7 +754,45 @@
   <!-- 동적 후보 카드 영역 -->
   <div id="dinnerCandidateList"></div>
 
+  <!-- 히스토리 -->
+  <div class="dinner-history-wrap" id="dinnerHistoryWrap" style="display:none">
+    <div class="dinner-history-toggle" onclick="toggleDinnerHistory()">
+      <span class="dinner-history-toggle-label">HISTORY</span>
+      <span class="dinner-history-toggle-arrow" id="dinnerHistoryArrow">▼</span>
+    </div>
+    <div class="dinner-history-list" id="dinnerHistoryList"></div>
+  </div>
+
+  <!-- 리셋하기 -->
+  <button class="btn-reset" style="margin-top:16px;margin-bottom:24px" onclick="openDinnerResetModal()">리셋하기</button>
+
 </div>
+
+<!-- 리셋 모달 -->
+<div class="dinner-modal-overlay" id="dinnerResetModal" style="display:none" onclick="if(event.target===this)closeDinnerResetModal()">
+  <div class="dinner-modal">
+    <!-- Step 1: 확인 -->
+    <div id="dinnerResetStep1">
+      <div class="dinner-modal-title">리셋할까요?</div>
+      <div class="dinner-modal-sub">현재 후보 및 투표가 모두 삭제돼요.<br>히스토리에 저장 후 진행해요.</div>
+      <div class="dinner-modal-btns">
+        <button class="dinner-modal-no" onclick="closeDinnerResetModal()">아니오</button>
+        <button class="dinner-modal-yes" onclick="dinnerResetStep2()">네</button>
+      </div>
+    </div>
+    <!-- Step 2: 날짜 입력 -->
+    <div id="dinnerResetStep2" style="display:none">
+      <div class="dinner-modal-title">회식일자는 언제였나요?</div>
+      <div class="dinner-modal-sub">히스토리에 이 날짜로 기록돼요.</div>
+      <input type="date" class="dinner-modal-date" id="dinnerResetDatePicker">
+      <div class="dinner-modal-btns">
+        <button class="dinner-modal-no" onclick="closeDinnerResetModal()">취소</button>
+        <button class="dinner-modal-yes" onclick="confirmDinnerReset()">저장 후 리셋</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- /🍻 회식메뉴 페이지 -->
 
 <!-- 이미지 라이트박스 -->
@@ -2306,10 +2388,86 @@ document.addEventListener('click', function(e) {
 let dinnerCandidates = [];
 let dinnerRef        = null;
 let dinnerInited     = false;
+let dinnerHistoryRef = null;
+let dinnerHistoryOpen = false;
+
+// ── 리셋 모달 ───────────────────────────
+function openDinnerResetModal() {
+  document.getElementById('dinnerResetStep1').style.display = '';
+  document.getElementById('dinnerResetStep2').style.display = 'none';
+  // 오늘 날짜 기본값
+  const today = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  document.getElementById('dinnerResetDatePicker').value =
+    `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+  document.getElementById('dinnerResetModal').style.display = 'flex';
+}
+function closeDinnerResetModal() {
+  document.getElementById('dinnerResetModal').style.display = 'none';
+}
+function dinnerResetStep2() {
+  document.getElementById('dinnerResetStep1').style.display = 'none';
+  document.getElementById('dinnerResetStep2').style.display = '';
+}
+function confirmDinnerReset() {
+  const dateVal = document.getElementById('dinnerResetDatePicker').value;
+  if (!dateVal) { toast('날짜를 선택해주세요'); return; }
+  if (!dinnerCandidates.length) { toast('저장할 후보가 없어요'); closeDinnerResetModal(); return; }
+
+  // 득표 순 정렬 후 히스토리 저장
+  const results = [...dinnerCandidates]
+    .map(c => ({ restaurant: c.restaurant, votes: Object.keys(c.votes || {}).length }))
+    .sort((a, b) => b.votes - a.votes);
+
+  const histKey = dateVal.replace(/-/g, '');
+  db.ref(`si-dinner-history/${histKey}`).set({ date: dateVal, savedAt: Date.now(), results })
+    .then(() => {
+      // 후보 전체 삭제
+      db.ref('si-dinner/candidates').remove();
+      closeDinnerResetModal();
+      toast('히스토리에 저장 후 리셋됐어요!');
+    });
+}
+
+// ── 히스토리 ─────────────────────────────
+function initDinnerHistory() {
+  if (dinnerHistoryRef) return;
+  dinnerHistoryRef = db.ref('si-dinner-history');
+  dinnerHistoryRef.on('value', snap => {
+    const val = snap.val() || {};
+    const entries = Object.values(val).sort((a, b) => b.date.localeCompare(a.date));
+    const wrap = document.getElementById('dinnerHistoryWrap');
+    const list = document.getElementById('dinnerHistoryList');
+    if (!entries.length) { if (wrap) wrap.style.display = 'none'; return; }
+    if (wrap) wrap.style.display = '';
+    if (!list) return;
+    list.innerHTML = entries.map(e => {
+      const d = e.date; // YYYY-MM-DD
+      const label = `${parseInt(d.slice(5,7))}월 ${parseInt(d.slice(8,10))}일`;
+      const rows = (e.results || []).map((r, i) => `
+        <div class="dinner-history-row">
+          <span class="dinner-history-rank">${i+1}위</span>
+          <span class="dinner-history-name">${esc(r.restaurant)}</span>
+          <span class="dinner-history-votes">${r.votes}표</span>
+        </div>`).join('');
+      return `<div class="dinner-history-item">
+        <div class="dinner-history-date">${label}</div>${rows}
+      </div>`;
+    }).join('');
+  });
+}
+function toggleDinnerHistory() {
+  dinnerHistoryOpen = !dinnerHistoryOpen;
+  const list  = document.getElementById('dinnerHistoryList');
+  const arrow = document.getElementById('dinnerHistoryArrow');
+  if (list)  list.classList.toggle('open', dinnerHistoryOpen);
+  if (arrow) arrow.style.transform = dinnerHistoryOpen ? 'rotate(180deg)' : '';
+}
 
 function initDinner() {
   if (dinnerInited) return;
   dinnerInited = true;
+  initDinnerHistory();
   dinnerRef = db.ref('si-dinner/candidates');
   dinnerRef.on('value', snap => {
     dinnerCandidates = [];
