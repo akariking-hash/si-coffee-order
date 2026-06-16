@@ -8,7 +8,6 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
   <style>
     /* ═══════════════════════════════════════════════════
        1. 글로벌 공통 (헤더 · 레이아웃 · 공유 컴포넌트)
@@ -1167,15 +1166,6 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
-// 추가
-firebase.auth().signInAnonymously()
-  .then(() => {
-    console.log('익명 로그인 성공');
-  })
-  .catch((error) => {
-    console.error('익명 로그인 실패', error);
-  });
 
 const db = firebase.database();
 
