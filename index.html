@@ -754,6 +754,9 @@
   <!-- 동적 후보 카드 영역 -->
   <div id="dinnerCandidateList"></div>
 
+  <!-- 리셋하기 -->
+  <button id="dinnerResetBtn" class="btn-reset" style="display:none;margin-top:16px;margin-bottom:4px" onclick="openDinnerResetModal()">리셋하기</button>
+
   <!-- 히스토리 -->
   <div class="dinner-history-wrap" id="dinnerHistoryWrap" style="display:none">
     <div class="dinner-history-toggle" onclick="toggleDinnerHistory()">
@@ -763,8 +766,6 @@
     <div class="dinner-history-list" id="dinnerHistoryList"></div>
   </div>
 
-  <!-- 리셋하기 -->
-  <button class="btn-reset" style="margin-top:16px;margin-bottom:24px" onclick="openDinnerResetModal()">리셋하기</button>
 
 </div>
 
@@ -2501,6 +2502,9 @@ function renderDinnerCandidates() {
   } else if (statusWrap) {
     statusWrap.style.display = 'none';
   }
+
+  const resetBtn = document.getElementById('dinnerResetBtn');
+  if (resetBtn) resetBtn.style.display = dinnerCandidates.length ? '' : 'none';
 
   if (!dinnerCandidates.length) {
     el.innerHTML = '<div class="card"><div class="dinner-empty">아직 등록된 후보가 없어요</div></div>';
