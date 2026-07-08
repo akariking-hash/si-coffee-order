@@ -1174,6 +1174,17 @@ const db = firebase.database();
 // 익명 로그인 (Firebase 규칙 auth != null 대응)
 firebase.auth().signInAnonymously().catch(err => console.error('Auth 실패', err));
 
+// auth 완료 후 현재 탭의 Firebase 리스너 재연결 (첫 로드 시 permission denied 방지)
+firebase.auth().onAuthStateChanged(user => {
+  if (!user) return;
+  if (document.getElementById('page-lunch').style.display !== 'none') {
+    initLunchDay();
+  }
+  if (document.getElementById('page-dinner').style.display !== 'none' && dinnerRef) {
+    dinnerRef.off(); dinnerRef = null; dinnerInited = false; initDinner();
+  }
+});
+
 // 연결 상태 표시
 db.ref('.info/connected').on('value', snap => {
   const on = snap.val();
