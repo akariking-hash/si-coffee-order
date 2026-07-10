@@ -1677,9 +1677,8 @@ function pickName(n) {
 
 
 function renderTabs() {
-  const isKiosk = !!getMenu()._config?.kiosk;
   const el = document.getElementById('tabs');
-  el.className = isKiosk ? 'tabs kiosk-tabs' : 'tabs';
+  el.className = 'tabs';
   el.innerHTML = cats.map(c =>
     `<button class="tab ${c===cat?'active':''}" onclick="pickCat('${c}')">${c}</button>`
   ).join('');
