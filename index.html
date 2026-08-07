@@ -1320,8 +1320,8 @@ const MENUS = {
       { name:"스트렝스 다방커피",    price:2500 },
     ],
     "콜드브루": [
-      { name:"콜드브루 커피",  price:4000, tempOnly:"ICE" },
-      { name:"콜드브루 라떼",  price:4500, tempOnly:"ICE" },
+      { name:"콜드브루 커피",  price:4000, tempOnly:"ICE", hasBean:true, beanLabel:'종류 선택', itemBeans:[{value:'kenya', label:'케냐', short:'케냐', price:0},{value:'decaf', label:'디카페인', short:'디카페인', price:0}] },
+      { name:"콜드브루 라떼",  price:4500, tempOnly:"ICE", hasBean:true, beanLabel:'종류 선택', itemBeans:[{value:'kenya', label:'케냐', short:'케냐', price:0},{value:'decaf', label:'디카페인', short:'디카페인', price:0}] },
     ],
     "시그니처": [
       { name:"흑임자 라떼",          price:4000, star:true, hasBean:true },
@@ -1641,6 +1641,7 @@ let currentCafe = CAFE_LIST[0];
 function getMenu()       { return MENUS[currentCafe]; }
 function getCafeBeans()  { return getMenu()._config?.beans  || DEFAULT_BEANS; }
 function getCafeExtras() { return getMenu()._config?.extras || EXTRAS; }
+function getItemBeans()  { return sel?.itemBeans || getCafeBeans(); }
 function getLsKey() { return `si-coffee-orders-${currentCafe}`; }
 
 let orderRef   = db.ref(`si-coffee/${currentCafe}/orders`);
@@ -1876,9 +1877,9 @@ function renderOpts() {
   // Bean (카페별)
   if (sel.hasBean) {
     html += `<div class="opt-group">
-      <div class="opt-label">원두 선택</div>
+      <div class="opt-label">${sel.beanLabel || '원두 선택'}</div>
       <div class="opt-btns">
-        ${getCafeBeans().map(b =>
+        ${getItemBeans().map(b =>
           `<button class="opt-btn ${bean===b.value?'on':''}" onclick="setBean('${b.value}')">${b.label}</button>`
         ).join('')}
       </div></div>`;
@@ -1919,7 +1920,7 @@ function calcPrice() {
   if (size === 'S') p = 1500;
   if (size === 'L') p = 3500;
   if (bean) {
-    const beanDef = getCafeBeans().find(b => b.value === bean);
+    const beanDef = getItemBeans().find(b => b.value === bean);
     if (beanDef?.price) p += beanDef.price;
   }
   const cafeExtras = getCafeExtras();
@@ -1932,7 +1933,7 @@ function buildOptsLabel() {
   if (temp) parts.push(temp);
   if (size && size !== 'M') parts.push(size + '사이즈');
   if (bean) {
-    const beanDef = getCafeBeans().find(b => b.value === bean);
+    const beanDef = getItemBeans().find(b => b.value === bean);
     if (beanDef) parts.push(beanDef.short);
   }
   const cafeExtras = getCafeExtras();
