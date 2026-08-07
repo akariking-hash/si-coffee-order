@@ -1289,9 +1289,22 @@ const MENUS = {
       accentExtra:   '#6C7AD4',
       bg:            '#DFE3FF',
       textColor:     '#0217A3',
+      noExtrasCategories: new Set(['시그니처','논커피','에이드/주스','수제 티','스무디/프라페','콜드브루']),
+      beans: [
+        { value:'danmil', label:'단밀 (고소한)',    short:'단밀',     price:0   },
+        { value:'momora', label:'모모라 (과일향)',   short:'모모라',   price:0   },
+        { value:'decaf',  label:'디카페인 (+800원)', short:'디카페인', price:800 },
+      ],
+      extras: [
+        { label:'단밀 샷 추가',     price:500 },
+        { label:'모모라 샷 추가',   price:800 },
+        { label:'디카페인 샷 추가', price:800 },
+        { label:'오트밀크 변경',    price:800, nameContains:'라떼' },
+        { label:'1리터 변경 [ICE]', price:2000, nameContains:'아메리카노' },
+      ],
     },
     "에스프레소": [
-      { name:"아메리카노",           price:2500, star:true },
+      { name:"아메리카노",           price:2500, star:true, hasBean:true },
       { name:"카페라떼",             price:3000, star:true },
       { name:"플랫화이트",           price:3000, note:"8oz/10oz 선택" },
       { name:"수제 바닐라 빈 라떼",  price:3800, star:true },
