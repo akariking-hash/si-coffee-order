@@ -1642,7 +1642,7 @@ db.ref('.info/connected').on('value', snap => {
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-const CAFE_LIST = Object.keys(MENUS); // ['소소', '커피나인', ...]
+const CAFE_LIST = ['스트렝스 커피', '우지커피', 'DPC', '커피나인', '소소'];
 let currentCafe = CAFE_LIST[0];
 function getMenu()       { return MENUS[currentCafe]; }
 function getCafeBeans()  { return getMenu()._config?.beans  || DEFAULT_BEANS; }
