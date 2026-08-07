@@ -1289,7 +1289,7 @@ const MENUS = {
       accentExtra:   '#6C7AD4',
       bg:            '#DFE3FF',
       textColor:     '#0217A3',
-      noExtrasCategories: new Set(['시그니처','논커피','에이드/주스','수제 티','스무디/프라페','콜드브루']),
+      noExtrasCategories: new Set(['논커피','에이드/주스','수제 티','스무디/프라페','콜드브루']),
       beans: [
         { value:'danmil', label:'단밀 (고소한)',    short:'단밀',     price:0   },
         { value:'momora', label:'모모라 (과일향)',   short:'모모라',   price:0   },
@@ -1324,10 +1324,10 @@ const MENUS = {
       { name:"콜드브루 라떼",  price:4500, tempOnly:"ICE" },
     ],
     "시그니처": [
-      { name:"흑임자 라떼",          price:4000, star:true },
-      { name:"아인슈페너 [10oz]",    price:4000, star:true },
+      { name:"흑임자 라떼",          price:4000, star:true, hasBean:true },
+      { name:"아인슈페너 [10oz]",    price:4000, star:true, hasBean:true },
       { name:"말차슈페너 [10oz]",    price:4000 },
-      { name:"통통 화채 (여름한정)", price:5800, note:"냉동과일과 생수박 팝핑보바+코코넛 젤리" },
+      { name:"통통 화채 (여름한정)", price:5800, note:"냉동과일과 생수박 팝핑보바+코코넛 젤리", skipExtras:true },
     ],
     "논커피": [
       { name:"바나나 딸기 라떼",    price:4000, tempOnly:"ICE" },
@@ -1884,8 +1884,8 @@ function renderOpts() {
       </div></div>`;
   }
 
-  // Extras (카페별 — 카테고리에 따라 숨김 가능)
-  if (!getMenu()._config?.noExtrasCategories?.has(cat)) {
+  // Extras (카페별 — 카테고리에 따라 숨김 가능, 개별 메뉴 skipExtras로도 제외)
+  if (!getMenu()._config?.noExtrasCategories?.has(cat) && !sel.skipExtras) {
     html += `<div class="opt-group">
       <div class="opt-label">추가 옵션</div>
       <div class="opt-btns">
