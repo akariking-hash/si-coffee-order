@@ -854,6 +854,7 @@ const MENUS = {
       accentDivider: '#E8C8C8',
       accentExtra:   '#5C2E2E',
       textColor:     '#B08080',
+      bg:            '#FDEBEB',
     },
   "COFFEE": [
     { name:"아메리카노",     price:2500, hasSize:true, hasBean:true },
@@ -907,7 +908,8 @@ const MENUS = {
       accentHover:   '#ECF0F9',
       accentDivider: '#C8D3E8',
       accentExtra:   '#4451A5',
-      textColor:     '#8083B0',   /* cafe-tab 전용 */
+      textColor:     '#8083B0',
+      bg:            '#ECF0F9',   /* cafe-tab 전용 */
       noExtrasCategories: new Set(['더치커피','에이드']),
       beans: [
         { value:'sig',   label:'코리아나 (고소한, 산미)',    short:'코리아나',  price:0   },
@@ -1749,7 +1751,7 @@ function applyCafeColor() {
   el.style.setProperty('--accent-hover',   cfg.accentHover   || '#FDEBEB');
   el.style.setProperty('--accent-divider', cfg.accentDivider || '#E8C8C8');
   el.style.setProperty('--accent-extra',   cfg.accentExtra   || '#5C2E2E');
-  el.style.setProperty('--bg', cfg.accentHover || '#FDEBEB');
+  el.style.setProperty('--bg', cfg.bg || cfg.accentHover || '#FDEBEB');
   el.style.background = 'var(--bg)';
   applyThemeToRoot(cfg);
 }
