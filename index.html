@@ -1299,24 +1299,24 @@ const MENUS = {
         { label:'단밀 샷 추가',     price:500 },
         { label:'모모라 샷 추가',   price:800 },
         { label:'디카페인 샷 추가', price:800 },
-        { label:'오트밀크 변경',    price:800, nameContains:'라떼' },
+        { label:'오트밀크 변경',    price:800, nameContains:'라떼', nameExcludes:'오트' },
         { label:'1리터 변경 [ICE]', price:2000, nameContains:'아메리카노' },
       ],
     },
     "에스프레소": [
       { name:"아메리카노",           price:2500, star:true, hasBean:true },
-      { name:"카페라떼",             price:3000, star:true },
-      { name:"플랫화이트",           price:3000, note:"8oz/10oz 선택" },
-      { name:"수제 바닐라 빈 라떼",  price:3800, star:true },
-      { name:"헤이즐넛 라떼",        price:3800 },
-      { name:"아몬드 라떼",          price:3800 },
-      { name:"얼그레이 라떼",        price:4000 },
-      { name:"카라멜 라떼",          price:4000 },
-      { name:"카페모카",             price:4000 },
-      { name:"수제 달고나 라떼",     price:4000, tempOnly:"ICE" },
-      { name:"연유 라떼",            price:4000 },
-      { name:"달콤 바나나 라떼",     price:4000 },
-      { name:"오트 꿀밤 라떼",       price:4300 },
+      { name:"카페라떼",             price:3000, star:true, hasBean:true },
+      { name:"플랫화이트",           price:3000, note:"8oz/10oz 선택", hasBean:true },
+      { name:"수제 바닐라 빈 라떼",  price:3800, star:true, hasBean:true },
+      { name:"헤이즐넛 라떼",        price:3800, hasBean:true },
+      { name:"아몬드 라떼",          price:3800, hasBean:true },
+      { name:"얼그레이 라떼",        price:4000, hasBean:true },
+      { name:"카라멜 라떼",          price:4000, hasBean:true },
+      { name:"카페모카",             price:4000, hasBean:true },
+      { name:"수제 달고나 라떼",     price:4000, tempOnly:"ICE", hasBean:true },
+      { name:"연유 라떼",            price:4000, hasBean:true },
+      { name:"달콤 바나나 라떼",     price:4000, hasBean:true },
+      { name:"오트 꿀밤 라떼",       price:4300, hasBean:true },
       { name:"스트렝스 다방커피",    price:2500 },
     ],
     "콜드브루": [
@@ -1891,6 +1891,7 @@ function renderOpts() {
       <div class="opt-btns">
         ${getCafeExtras().map((e,i) => {
           if (e.nameContains && !sel.name.includes(e.nameContains)) return '';
+          if (e.nameExcludes && sel.name.includes(e.nameExcludes)) return '';
           return `<button class="opt-btn extra ${extras.includes(i)?'on':''}" onclick="toggleExtra(${i})">
             ${e.label}${e.price > 0 ? ' +' + e.price.toLocaleString() : ''}
           </button>`;
