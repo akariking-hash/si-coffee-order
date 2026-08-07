@@ -1751,9 +1751,8 @@ function applyCafeColor() {
   el.style.setProperty('--accent-hover',   cfg.accentHover   || '#FDEBEB');
   el.style.setProperty('--accent-divider', cfg.accentDivider || '#E8C8C8');
   el.style.setProperty('--accent-extra',   cfg.accentExtra   || '#5C2E2E');
-  el.style.setProperty('--bg', cfg.bg || cfg.accentHover || '#FDEBEB');
-  el.style.background = 'var(--bg)';
   applyThemeToRoot(cfg);
+  el.style.background = 'var(--bg)';
 }
 
 function switchCafe(name) {
