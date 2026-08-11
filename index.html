@@ -2032,7 +2032,16 @@ function renderOrders() {
     return;
   }
 
-  el.innerHTML = orders.map(o => {
+  const menuOrder = {};
+  let _idx = 0;
+  Object.values(getMenu()).filter(Array.isArray).forEach(items =>
+    items.forEach(item => { menuOrder[item.name] = _idx++; })
+  );
+  const sortedOrders = [...orders].sort((a, b) =>
+    (menuOrder[a.drink] ?? 999) - (menuOrder[b.drink] ?? 999)
+  );
+
+  el.innerHTML = sortedOrders.map(o => {
     const safeKey = encodeURIComponent(o.key);
     const nameTags = o.names.map((n, i) =>
       `<span class="name-tag">${n}<button onclick="removeName(decodeURIComponent('${safeKey}'),${i})">×</button></span>`
