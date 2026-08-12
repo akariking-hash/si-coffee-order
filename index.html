@@ -1654,6 +1654,22 @@ function getLsKey() { return `si-coffee-orders-${currentCafe}`; }
 
 let orderRef   = db.ref(`si-coffee/${currentCafe}/orders`);
 const historyRef = db.ref('si-coffee/history');
+const logRef     = db.ref('si-coffee/logs');
+
+let cachedIP = null;
+async function ensureIP() {
+  if (!cachedIP) {
+    try {
+      const res = await fetch('https://api.ipify.org?format=json');
+      cachedIP = (await res.json()).ip;
+    } catch { cachedIP = 'unknown'; }
+  }
+  return cachedIP;
+}
+async function logOrder(name, drink, opts, action) {
+  const ip = await ensureIP();
+  logRef.push({ ts: Date.now(), cafe: currentCafe, name, drink, opts, action, ip });
+}
 
 // ─── 구버전 opts 텍스트 정규화 ───
 function normalizeOrders(arr) {
@@ -1721,6 +1737,7 @@ let orders = [];
 
 function init() {
   selectedName = getMyName() || null; // 저장된 이름 자동 선택
+  ensureIP();
   loadLocal();
   attachOrderListener();
   applyCafeColor();
@@ -1978,6 +1995,7 @@ function addOrder() {
   else { orders.push({ key, drink: sel.name, opts, unitPrice: calcPrice(), names: [name] }); }
 
   saveOrders();
+  logOrder(name, sel.name, opts, replaced ? 'change' : 'add');
 
   // sel 초기화 전에 메뉴명 저장
   const drinkName = opts ? `${sel.name} (${opts})` : sel.name;
@@ -2018,6 +2036,7 @@ function joinOrder(key) {
   const t = orders.find(o => o.key === key);
   if (t) t.names.push(name);
   saveOrders();
+  logOrder(name, t.drink, t.opts, 'join');
   toast(`${name}님이 합류했어요!`);
 }
 
