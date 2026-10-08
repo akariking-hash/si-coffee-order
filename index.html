@@ -1562,7 +1562,7 @@ const PEOPLE = [
   '이영실','윤주열','주승환','유석민','지서영',
 ];
 
-const LUNCH_OPTIONS = ['이리오너라','굿모닝','가톨릭회관','도시락','약속','연차','오늘은 여기 어때요?'];
+const LUNCH_OPTIONS = ['이리오너라','사거리포차','굿모닝','도시락','약속','연차','오늘은 여기 어때요?'];
 // 이름별 기본 선택 (당일 선택 이력 없을 때만, 세션당 1회 자동 적용)
 const LUNCH_DEFAULTS = { '김샛별': '도시락' };
 const _lunchDefaultsApplied = new Set();
@@ -2171,7 +2171,7 @@ function switchPage(page) {
 }
 
 // ── 점심 선택 ──────────────────────────────
-const IMAGE_OPTS = new Set(['이리오너라','굿모닝','가톨릭회관']); // 이미지 첨부 가능 옵션
+const IMAGE_OPTS = new Set(['이리오너라','굿모닝','사거리포차']); // 이미지 첨부 가능 옵션
 
 // 한국 공휴일 (2025~2026) — 매년 초 업데이트
 const HOLIDAYS = {
@@ -2205,13 +2205,13 @@ let lunchSelectedName = null;
 let lunchChoices      = {};
 let lunchRef          = null;
 let cafeImages        = {};   // { 이리오너라: 'data:image/...', ... }
-let weeklyImages      = {};   // 굿모닝, 가톨릭회관 (주별)
+let weeklyImages      = {};   // 굿모닝 (주별)
 let dailyImages       = {};   // 이리오너라 (일별)
 let cafeImagesRef     = null;
 let cafeImagesDailyRef = null;
 let cafeImagesWeek    = null;
 let cafeImagesDate    = null;
-const DAILY_IMAGE_OPTS = new Set(['이리오너라']);
+const DAILY_IMAGE_OPTS = new Set(['이리오너라','사거리포차']);
 let currentImageOpt   = null; // 이미지 메뉴 열린 옵션명
 let lunchJoinMode     = false; // 함께해요 버튼으로 참여 시 opts 활성화 억제
 let lunchHereMode     = false; // 여기어때요 버튼 클릭 후 텍스트 입력 대기 상태
@@ -2360,7 +2360,7 @@ function attachCafeImagesListener() {
   const weekKey = formatDate(currentWeekMonday);
   const dateKey = getLunchDateKey();
 
-  // 주별 리스너 (굿모닝, 가톨릭회관)
+  // 주별 리스너 (굿모닝)
   if (cafeImagesWeek !== weekKey) {
     if (cafeImagesRef) cafeImagesRef.off();
     cafeImagesWeek = weekKey;
@@ -2765,7 +2765,7 @@ function renderLunchResult() {
         const note = personNotes[n] ? `(${personNotes[n]})` : '';
         return `<span class="lunch-name-tag">${n}${note}<button onclick="cancelLunchChoice('${n}')">×</button></span>`;
       }).join('');
-      const JOIN_TEXT = { '이리오너라':'함께해요', '굿모닝':'함께해요', '가톨릭회관':'함께해요', '도시락':'저도요', '약속':'저도요', '연차':'저도요' };
+      const JOIN_TEXT = { '이리오너라':'함께해요', '굿모닝':'함께해요', '사거리포차':'함께해요', '도시락':'저도요', '약속':'저도요', '연차':'저도요' };
       const joinText = JOIN_TEXT[opt];
       const safeOpt = encodeURIComponent(opt);
       rowItems.push({
