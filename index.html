@@ -2614,6 +2614,8 @@ function pickLunchName(n) {
   renderLunchNameGrid();
   renderLunchOpts();
   renderSchedules();
+  const schNameEl = document.getElementById('schName');
+  if (schNameEl) schNameEl.value = n;
 }
 
 function applyLunchNameDirectInput() {
