@@ -2566,8 +2566,10 @@ function saveSchedule() {
   const entry = { name, opt, type, createdBy };
   if (type === 'weekly')  entry.day  = parseInt(document.getElementById('schDay').value);
   if (type === 'monthly') entry.date = parseInt(document.getElementById('schDate').value);
-  schedulesRef.push(entry);
+  const newRef = schedulesRef.push(entry);
+  lunchSchedules.push({ id: newRef.key, ...entry });
   closeScheduleForm();
+  renderSchedules();
 }
 
 function deleteSchedule(id) {
