@@ -2496,11 +2496,13 @@ function schTypeLabel(s) {
 function renderSchedules() {
   const el = document.getElementById('scheduleList');
   if (!el) return;
-  if (!lunchSchedules.length) {
-    el.innerHTML = '<div class="empty" style="padding:6px 0 2px">반복 일정이 없어요</div>';
+  const myName = getMyName();
+  const mine = lunchSchedules.filter(s => s.createdBy === myName);
+  if (!mine.length) {
+    el.innerHTML = '<div class="empty" style="padding:6px 0 2px">등록한 반복 일정이 없어요</div>';
     return;
   }
-  el.innerHTML = `<div class="schedule-list">${lunchSchedules.map(s =>
+  el.innerHTML = `<div class="schedule-list">${mine.map(s =>
     `<div class="schedule-item">
       <div class="schedule-item-info">
         <span class="schedule-tag">${schTypeLabel(s)}</span>
@@ -2558,7 +2560,9 @@ function saveSchedule() {
   const name  = document.getElementById('schName').value;
   const opt   = document.getElementById('schOpt').value;
   const type  = document.getElementById('schType').value;
-  const entry = { name, opt, type };
+  const createdBy = getMyName();
+  if (!createdBy) { toast('이름을 먼저 선택해주세요'); return; }
+  const entry = { name, opt, type, createdBy };
   if (type === 'weekly')  entry.day  = parseInt(document.getElementById('schDay').value);
   if (type === 'monthly') entry.date = parseInt(document.getElementById('schDate').value);
   schedulesRef.push(entry);
@@ -2608,6 +2612,7 @@ function pickLunchName(n) {
   if (ph)  ph.innerHTML = '직접<br>입력';
   renderLunchNameGrid();
   renderLunchOpts();
+  renderSchedules();
 }
 
 function applyLunchNameDirectInput() {
