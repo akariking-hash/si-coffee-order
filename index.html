@@ -2496,7 +2496,7 @@ function schTypeLabel(s) {
 function renderSchedules() {
   const el = document.getElementById('scheduleList');
   if (!el) return;
-  const myName = getMyName();
+  const myName = lunchSelectedName || getMyName();
   const mine = lunchSchedules.filter(s => s.createdBy === myName);
   if (!mine.length) {
     el.innerHTML = '<div class="empty" style="padding:6px 0 2px">등록한 반복 일정이 없어요</div>';
