@@ -2518,7 +2518,7 @@ function openScheduleForm() {
   const nameOpts = PEOPLE.map(n => `<option value="${n}">${n}</option>`).join('');
   const optOpts  = LUNCH_OPTIONS.filter(o => o !== '오늘은 여기 어때요?')
                     .map(o => `<option value="${o}">${o}</option>`).join('');
-  const dayOpts  = DAY_LABELS.map((d,i) => `<option value="${i}">${d}요일</option>`).join('');
+  const dayOpts  = DAY_LABELS.map((d,i) => i >= 1 && i <= 5 ? `<option value="${i}">${d}요일</option>` : '').join('');
   const dateOpts = Array.from({length:31}, (_,i) => `<option value="${i+1}">${i+1}일</option>`).join('');
   const form = document.getElementById('scheduleForm');
   form.innerHTML = `<div class="schedule-form">
