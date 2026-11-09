@@ -2560,7 +2560,7 @@ function saveSchedule() {
   const name  = document.getElementById('schName').value;
   const opt   = document.getElementById('schOpt').value;
   const type  = document.getElementById('schType').value;
-  const createdBy = getMyName();
+  const createdBy = lunchSelectedName || getMyName();
   if (!createdBy) { toast('이름을 먼저 선택해주세요'); return; }
   const entry = { name, opt, type, createdBy };
   if (type === 'weekly')  entry.day  = parseInt(document.getElementById('schDay').value);
