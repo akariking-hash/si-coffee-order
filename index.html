@@ -2519,15 +2519,14 @@ function openScheduleForm() {
   document.getElementById('scheduleAddBtn').style.display = 'none';
   const _curName = lunchSelectedName || getMyName();
   const nameOpts = PEOPLE.map(n => `<option value="${n}" ${n === _curName ? 'selected' : ''}>${n}</option>`).join('');
-  const optOpts  = LUNCH_OPTIONS.filter(o => o !== '오늘은 여기 어때요?')
-                    .map(o => `<option value="${o}">${o}</option>`).join('');
+  const SCH_OPT_ORDER = ['약속','도시락','연차','이리오너라','사거리포차','굿모닝'];
+  const optOpts  = SCH_OPT_ORDER.map(o => `<option value="${o}">${o}</option>`).join('');
   const dayOpts  = DAY_LABELS.map((d,i) => i >= 1 && i <= 5 ? `<option value="${i}">${d}요일</option>` : '').join('');
   const dateOpts = Array.from({length:31}, (_,i) => `<option value="${i+1}">${i+1}일</option>`).join('');
   const form = document.getElementById('scheduleForm');
   form.innerHTML = `<div class="schedule-form">
     <div class="schedule-form-row">
       <select id="schName">${nameOpts}</select>
-      <select id="schOpt">${optOpts}</select>
     </div>
     <div class="schedule-form-row">
       <select id="schType" onchange="onSchTypeChange()">
@@ -2537,6 +2536,9 @@ function openScheduleForm() {
       </select>
       <select id="schDay" style="display:none">${dayOpts}</select>
       <select id="schDate" style="display:none">${dateOpts}</select>
+    </div>
+    <div class="schedule-form-row">
+      <select id="schOpt">${optOpts}</select>
     </div>
     <div class="schedule-form-btns">
       <button class="schedule-form-btn-save" onclick="saveSchedule()">추가</button>
