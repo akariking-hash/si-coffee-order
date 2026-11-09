@@ -1652,6 +1652,7 @@ firebase.auth().signInAnonymously().catch(err => console.error('Auth 실패', er
 // auth 완료 후 현재 탭의 Firebase 리스너 재연결 (첫 로드 시 permission denied 방지)
 firebase.auth().onAuthStateChanged(user => {
   if (!user) return;
+  initSchedules();
   if (document.getElementById('page-lunch').style.display !== 'none') {
     initLunchDay();
   }
@@ -1763,7 +1764,6 @@ let orders = [];
 function init() {
   selectedName = getMyName() || null; // 저장된 이름 자동 선택
   ensureIP();
-  initSchedules();
   loadLocal();
   attachOrderListener();
   applyCafeColor();
