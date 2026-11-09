@@ -2576,7 +2576,28 @@ function saveSchedule() {
 
 function deleteSchedule(id) {
   if (!confirm('이 반복 일정을 삭제할까요?')) return;
+  const s = lunchSchedules.find(x => x.id === id);
   schedulesRef.child(id).remove();
+  if (!s) return;
+
+  // 오늘부터 90일 이내 미래 날짜 중 일정이 채운 선택 삭제
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  for (let i = 0; i < 90; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    const matches = s.type === 'daily' ||
+      (s.type === 'weekly'  && s.day  === d.getDay()) ||
+      (s.type === 'monthly' && s.date === d.getDate());
+    if (!matches) continue;
+    const ref = db.ref(`si-lunch/${formatDate(d)}`);
+    ref.once('value', snap => {
+      const val = snap.val();
+      if (val && val[s.name] === s.opt) {
+        ref.update({ [s.name]: null, [`_ts/${s.name}`]: null });
+      }
+    });
+  }
 }
 
 // 선택값 + 타임스탬프 동시 저장 (입력 순서 추적)
